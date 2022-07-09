@@ -1,8 +1,12 @@
 demo/django-env
-env/
-
+lms_env/
+.vscode/
 .DS_Store
 
 
 .gitsecret/keys/random_seed
 !*.secret
+
+*.pyc
+__pycache__
+db.sqlite3
