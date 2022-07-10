@@ -1,0 +1,10 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Course description</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>{{course.subject}}{{course.course_code}}</h1>
+    <p>{{course.course_description}} </p>
+{% endblock body %}

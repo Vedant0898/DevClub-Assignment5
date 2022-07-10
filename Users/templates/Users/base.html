@@ -1,0 +1,23 @@
+<html>
+    <head>
+        {% block head %}
+        {% endblock head %}
+    </head>
+    <body>
+        <p>
+        {% if user.is_authenticated %}
+            Hello, {{ user.username}}
+            <br>
+            <a href="{% url 'Users:logout' %}">Logout</a>
+            <br>
+            {% if 'role' in request.session %}
+                {{request.session.role}}
+            {% endif %}
+        {% else %}
+            <a href="{% url 'Users:login' %}">Login</a>
+        {% endif %}
+        </p>
+        {% block body %}
+        {% endblock body %}
+    </body>
+</html>
