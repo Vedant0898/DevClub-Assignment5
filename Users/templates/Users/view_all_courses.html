@@ -9,7 +9,7 @@
     <ul>
         {% for course in courses %}
             <li>
-                <a href="{% url 'Users:course' course.id %}"> {{course.subject}}{{course.course_code}} </a>
+                <a href="{% url 'Users:course' course.id %}"> {{course.subject}}{{course.course_code}} ({{course.year}}-{{course.sem}})</a>
             </li>
         
         {% empty %}
@@ -18,7 +18,7 @@
 
         {% if is_instructor %}
             <li>
-                <a href="{% url 'Users:register_new_course' %}"> Register New Course </a>
+                <a href="{% url 'Users:register_new_course' %}"> Create New Course </a>
             </li>
         {% endif %}
     </ul>

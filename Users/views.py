@@ -21,7 +21,7 @@ def course(request,course_id):
 
 
 def courses(request):
-    courses = Course.objects.all()
+    courses = Course.objects.all().order_by('-id')
     context = {'courses':courses,'is_instructor':False}
     if 'role' in request.session and request.session['role']=='instructor':
         context['is_instructor'] = True

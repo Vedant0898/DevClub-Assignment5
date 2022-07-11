@@ -10,15 +10,19 @@
         <p>
         {% if user.is_authenticated %}
             Hello, {{ user.username}}
+            {% if 'role' in request.session %}
+                ({{request.session.role}})
+            {% endif %}
             <br>
             <a href="{% url 'Users:logout' %}">Logout</a>
-            <br>
-            {% if 'role' in request.session %}
-                {{request.session.role}}
-            {% endif %}
+          
         {% else %}
             <a href="{% url 'Users:login' %}">Login</a>
         {% endif %}
+        </p>
+
+        <p>
+            <a href="{% url 'Users:courses' %}">View all courses</a>
         </p>
         {% block body %}
         {% endblock body %}
