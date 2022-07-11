@@ -1,5 +1,9 @@
 from django import forms
 
-from .models import Student
+from .models import Course
 
-# class StudentRegisterForm
+class CourseForm(forms.ModelForm):
+    class Meta:
+        model = Course
+        exclude = ('instructor',)
+        

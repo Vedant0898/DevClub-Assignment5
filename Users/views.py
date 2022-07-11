@@ -1,25 +1,32 @@
 from django.shortcuts import render
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login,logout
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
-from .models import Course
+from datetime import date
+
+from .models import Course,Instructor
+from .forms import CourseForm
 
 
 # Create your views here.
 def index(request):
     return render(request,'Users/index.html')
 
-def courses(request,course_name):
-    sub = course_name[:3]
-    num = 0
-    if(len(course_name)>3):
-        num = course_name[-3:]
-    
-    course = Course.objects.get(subject__contains = sub, course_code__contains=num)
+def course(request,course_id):
+    course = Course.objects.get(id=course_id)
     context = {'course':course}
     return render(request,'Users/course_desc.html',context=context)
 
+
+def courses(request):
+    courses = Course.objects.all()
+    context = {'courses':courses,'is_instructor':False}
+    if 'role' in request.session and request.session['role']=='instructor':
+        context['is_instructor'] = True
+
+    return render(request,'Users/view_all_courses.html',context=context)
 
 def login_user(request):
     if request.method!='POST':
@@ -44,6 +51,38 @@ def login_user(request):
     return render(request,'Users/login.html',context=context)
 
 def logout_user(request):
-    del request.session['role']
+    if 'role' in request.session:
+        del request.session['role']
     logout(request)
     return HttpResponseRedirect(reverse('Users:index'))
+
+@login_required
+def register_new_course(request):
+    # Handle auth logic
+    if 'role' not in request.session:
+        return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
+    if request.session['role']!='instructor':
+        return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
+    
+    instr = Instructor.objects.get(user=request.user)
+    if request.method != 'POST':
+        # Create a form with some prefilled data
+        data = {'year': date.today().year}
+        form = CourseForm(initial=data)
+
+    else:
+        #Process filled form
+        form = CourseForm(request.POST)
+
+        if form.is_valid():
+            course = form.save(commit=False)
+            course.instructor = instr
+            course.save()
+            return HttpResponseRedirect(reverse('Users:courses'))
+        else:
+            print('some error')
+    context = {'form' : form}
+
+
+
+    return render(request,'Users/register_new_course.html',context=context)

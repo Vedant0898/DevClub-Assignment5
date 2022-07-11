@@ -5,6 +5,9 @@
     </head>
     <body>
         <p>
+            <a href="{% url 'Users:index' %}">Home</a>
+        </p>
+        <p>
         {% if user.is_authenticated %}
             Hello, {{ user.username}}
             <br>
