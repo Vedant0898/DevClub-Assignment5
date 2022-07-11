@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import login,logout
 from django.contrib.auth.decorators import login_required
@@ -10,13 +10,28 @@ from .models import Course,Instructor
 from .forms import CourseForm
 
 
+
+def check_instructor(request):
+    """returns true if the user is instructor else false"""
+    if 'role' not in request.session:
+        return False
+    if request.session['role']!='instructor':
+        return False
+    
+    return True
+    
+
 # Create your views here.
 def index(request):
     return render(request,'Users/index.html')
 
 def course(request,course_id):
     course = Course.objects.get(id=course_id)
-    context = {'course':course}
+    context = {'course':course,'is_instructor':False}
+    if check_instructor(request):
+        instr = Instructor.objects.get(user=request.user)
+        if course.instructor==instr:
+            context['is_instructor'] = True
     return render(request,'Users/course_desc.html',context=context)
 
 
@@ -59,10 +74,13 @@ def logout_user(request):
 @login_required
 def register_new_course(request):
     # Handle auth logic
-    if 'role' not in request.session:
+    if not check_instructor(request):
         return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
-    if request.session['role']!='instructor':
-        return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    # if 'role' not in request.session:
+    #     return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
+    # if request.session['role']!='instructor':
+    #     return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
     
     instr = Instructor.objects.get(user=request.user)
     if request.method != 'POST':
@@ -79,10 +97,35 @@ def register_new_course(request):
             course.instructor = instr
             course.save()
             return HttpResponseRedirect(reverse('Users:courses'))
-        else:
-            print('some error')
+        
     context = {'form' : form}
 
 
 
     return render(request,'Users/register_new_course.html',context=context)
+
+@login_required
+def edit_course(request,course_id):
+    """Allows instructor to edit their own courses"""
+    if not check_instructor(request):
+        return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    instr = Instructor.objects.get(user=request.user)
+    course = get_object_or_404(Course,id=course_id)
+
+    if course.instructor!=instr:
+        return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    if request.method !='POST':
+        form = CourseForm(instance=course)
+    
+    else:
+        form = CourseForm(instance=course, data=request.POST)
+
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('Users:course',args=[course.id]))
+    
+    context = {'form': form,'course':course}
+
+    return render(request,'Users/edit_course.html',context=context)
