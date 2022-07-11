@@ -32,6 +32,9 @@ class Course(models.Model):
     course_description = models.CharField(max_length=50)
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
 
+    class Meta:
+       ordering = ['-year', '-sem', 'subject','course_code']
+
     def __str__(self):
         s = f'{self.year}-{self.sem} {self.subject}{self.course_code}'
         return s

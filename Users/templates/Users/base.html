@@ -15,7 +15,9 @@
             {% endif %}
             <br>
             <a href="{% url 'Users:logout' %}">Logout</a>
-          
+            <br>
+            <a href="{% url 'Users:my_courses' %}">View my courses</a>
+
         {% else %}
             <a href="{% url 'Users:login' %}">Login</a>
         {% endif %}

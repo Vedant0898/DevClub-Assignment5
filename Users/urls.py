@@ -6,6 +6,7 @@ urlpatterns = [
     #Home page
     path('',views.index, name='index'),
     path('courses',views.courses,name = 'courses'),
+    path('courses/my',views.my_courses,name='my_courses'),
     path('course/<slug:course_id>',views.course,name='course'),
     path('new_course',views.register_new_course, name='register_new_course'),
     path('edit_course/<slug:course_id>',views.edit_course,name='edit_course'),

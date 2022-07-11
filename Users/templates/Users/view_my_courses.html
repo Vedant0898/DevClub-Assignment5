@@ -1,0 +1,29 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Courses</title>
+{% endblock head %}
+
+{% block body %}
+    <p>Details of all courses</p>
+    <ul>
+        {% for course in courses %}
+            <li>
+                <a href="{% url 'Users:course' course.id %}"> {{course.subject}}{{course.course_code}} ({{course.year}}-{{course.sem}})</a>
+            </li>
+        
+        {% empty %}
+            {% if is_instructor %}
+                <li>No course found</li>
+            {% else %}
+                <li>You have not registered for any course</li>
+            {% endif %}
+        {% endfor %}
+
+        {% if is_instructor %}
+            <li>
+                <a href="{% url 'Users:register_new_course' %}"> Create New Course </a>
+            </li>
+        {% endif %}
+    </ul>
+{% endblock body %}

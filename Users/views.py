@@ -6,7 +6,7 @@ from django.http import HttpResponseRedirect
 from django.urls import reverse
 from datetime import date
 
-from .models import Course,Instructor
+from .models import Course,Instructor,Student,Participants
 from .forms import CourseForm
 
 
@@ -36,7 +36,7 @@ def course(request,course_id):
 
 
 def courses(request):
-    courses = Course.objects.all().order_by('-id')
+    courses = Course.objects.all()
     context = {'courses':courses,'is_instructor':False}
     if 'role' in request.session and request.session['role']=='instructor':
         context['is_instructor'] = True
@@ -129,3 +129,25 @@ def edit_course(request,course_id):
     context = {'form': form,'course':course}
 
     return render(request,'Users/edit_course.html',context=context)
+
+@login_required
+def my_courses(request):
+    #create 2 separate templates for student and non student
+    if 'role' not in request.session:
+        courses = Course.objects.all()
+    elif request.session['role']=='student':
+        stu = Student.objects.get(user = request.user)
+        participants = Participants.objects.filter(student=stu)
+        context = {'pt':participants}
+        return render(request,'Users/view_my_courses_student.html',context=context)
+    elif request.session['role']=='instructor':
+        instr = Instructor.objects.get(user = request.user)
+        courses = instr.course_set.order_by('-id')
+    else:
+        courses = Course.objects.all()
+    
+    context = {'courses':courses,'is_instructor':False}
+    if 'role' in request.session and request.session['role']=='instructor':
+        context['is_instructor'] = True
+
+    return render(request,'Users/view_my_courses.html',context=context)
