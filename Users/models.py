@@ -7,7 +7,7 @@ class Instructor(models.Model):
     """Model for Instructor"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField()
-    verification_status = models.BooleanField()
+    verification_status = models.BooleanField(default=False)
 
     def __str__(self):
         s = f'{self.user} ({self.email})'

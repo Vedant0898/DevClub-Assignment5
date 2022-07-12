@@ -5,5 +5,15 @@
 {% endblock head %}
 
 {% block body %}
-    <p>Registration Page for instructors</p>
+    <p>Registration Page-2 for instructors</p>
+    <form method="post" action="{% url 'Users:register_instructor' %}" >
+        {% csrf_token %}
+        {{form.as_p}}
+
+        <button name="submit">Complete registration as instructor</button>
+    </form>
+
+    <p>
+        <a href="{% url 'Users:register_student' %}">Click here</a> to register as student
+    </p>
 {% endblock body %}

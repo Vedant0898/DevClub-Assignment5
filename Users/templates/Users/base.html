@@ -14,12 +14,18 @@
                 ({{request.session.role}})
             {% endif %}
             <br>
+            {% if 'registration_incomplete' in request.session %}
+                <a href="{% url 'Users:register_user' %}">Complete your registration</a>
+            {% endif %}
+            <br>
             <a href="{% url 'Users:logout' %}">Logout</a>
             <br>
             <a href="{% url 'Users:my_courses' %}">View my courses</a>
 
         {% else %}
             <a href="{% url 'Users:login' %}">Login</a>
+            <br>
+            <a href="{% url 'Users:register_user' %}">Register</a>
         {% endif %}
         </p>
 

@@ -1,13 +1,13 @@
 from django.shortcuts import render,get_object_or_404
-from django.contrib.auth.forms import AuthenticationForm
-from django.contrib.auth import login,logout
+from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
+from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from datetime import date
 
 from .models import Course,Instructor,Student,Participants
-from .forms import CourseForm
+from .forms import CourseForm, StudentRegistrationForm, InstructorRegistrationForm
 
 
 
@@ -62,6 +62,10 @@ def courses(request):
     return render(request,'Users/view_all_courses.html',context=context)
 
 def login_user(request):
+
+    if request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('Users:index'))
+
     if request.method!='POST':
         #Display a login form
         form = AuthenticationForm(request)
@@ -77,6 +81,8 @@ def login_user(request):
                 request.session['role'] = 'student'
             elif (user.instructor_set.all().exists()):
                 request.session['role'] = 'instructor'
+            elif not user.is_staff:
+                request.session['registration_incomplete'] = True
             
             return HttpResponseRedirect(reverse('Users:index'))
 
@@ -86,6 +92,8 @@ def login_user(request):
 def logout_user(request):
     if 'role' in request.session:
         del request.session['role']
+    if 'registration_incomplete' in request.session:
+        del request.session['registration_incomplete']
     logout(request)
     return HttpResponseRedirect(reverse('Users:index'))
 
@@ -180,3 +188,85 @@ def register_for_course(request,course_id):
         Participants.objects.create(course=course, student=student)
 
     return HttpResponseRedirect(reverse('Users:my_courses'))
+
+def register_user(request):
+    
+    if request.user.is_authenticated and 'registration_incomplete' not in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+
+    if request.method!='POST':
+        # display a blank registration form
+        form = UserCreationForm()
+    else:
+        # post data submitted
+        form = UserCreationForm(data = request.POST)
+
+        if form.is_valid():
+            new_user = form.save()
+
+            #log in the user
+            authenticated_user = authenticate(username=new_user.username,password=request.POST['password1'])
+            login(request,authenticated_user)
+            request.session['registration_incomplete'] = True
+            return HttpResponseRedirect(reverse('Users:register_user'))
+    context = {'form': form}
+
+    return render(request,'Users/register_user.html',context=context)
+
+@login_required
+def register_student(request):
+
+    if 'registration_incomplete' not in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+
+    if request.method!='POST':
+        #display blank form
+        form = StudentRegistrationForm()
+    
+    else:
+        # post data submitted
+        form = StudentRegistrationForm(data=request.POST)
+
+        if form.is_valid():
+            new_student = form.save(commit=False)
+            new_student.user = request.user
+
+            new_student.save()
+            
+            del request.session['registration_incomplete']
+            request.session['role'] = 'student'
+
+            return HttpResponseRedirect(reverse('Users:index'))
+
+    context = {'form':form}
+
+    return render(request,'Users/register_student.html',context=context)
+
+@login_required
+def register_instructor(request):
+    
+    if 'registration_incomplete' not in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+
+    if request.method!='POST':
+        #display blank form
+        form = InstructorRegistrationForm()
+    
+    else:
+        # post data submitted
+        form = InstructorRegistrationForm(data=request.POST)
+
+        if form.is_valid():
+            new_instr = form.save(commit=False)
+            new_instr.user = request.user
+
+            new_instr.save()
+            
+            del request.session['registration_incomplete']
+            request.session['role'] = 'instructor'
+
+            return HttpResponseRedirect(reverse('Users:index'))
+
+    context = {'form':form}
+
+    return render(request,'Users/register_instructor.html',context=context)

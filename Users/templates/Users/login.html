@@ -13,4 +13,8 @@
         <button name="submit">Login</button>
         <input type="hidden" name="next" value="{% url 'Users:index' %}" />
     </form>
+
+    <p>
+        Don't have an account? <a href="{% url 'Users:register_user' %}">Register Now</a>
+    </p>
 {% endblock body %}
