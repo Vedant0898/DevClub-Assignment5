@@ -77,11 +77,6 @@ def register_new_course(request):
     if not check_instructor(request):
         return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
 
-    # if 'role' not in request.session:
-    #     return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
-    # if request.session['role']!='instructor':
-    #     return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
-    
     instr = Instructor.objects.get(user=request.user)
     if request.method != 'POST':
         # Create a form with some prefilled data

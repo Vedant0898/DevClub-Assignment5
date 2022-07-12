@@ -32,6 +32,12 @@ class Course(models.Model):
     course_description = models.CharField(max_length=50)
     instructor = models.ForeignKey(Instructor, on_delete=models.CASCADE)
 
+    course_status = (
+        ('1','Ongoing'),
+        ('2','Completed')
+    )
+
+    status = models.CharField(max_length=1, choices=course_status,default='1')
     class Meta:
        ordering = ['-year', '-sem', 'subject','course_code']
 
@@ -47,6 +53,10 @@ class Participants(models.Model):
 
     verification_status = models.BooleanField()
 
+    class Meta:
+        verbose_name = 'Participant'
+        verbose_name_plural = 'Participants'
+        ordering = ['course']
 
     def __str__(self):
         s = f'{self.course.subject}{self.course.course_code} # {self.student.user}'
