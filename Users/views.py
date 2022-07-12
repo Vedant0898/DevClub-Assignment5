@@ -19,6 +19,16 @@ def check_instructor(request):
         return False
     
     return True
+
+
+def check_student(request):
+    """returns true if the user is student else false"""
+    if 'role' not in request.session:
+        return False
+    if request.session['role']!='student':
+        return False
+    
+    return True
     
 
 # Create your views here.
@@ -27,11 +37,19 @@ def index(request):
 
 def course(request,course_id):
     course = Course.objects.get(id=course_id)
-    context = {'course':course,'is_instructor':False}
+    context = {'course':course,'is_instructor':False,'can_register':False}
     if check_instructor(request):
         instr = Instructor.objects.get(user=request.user)
         if course.instructor==instr:
             context['is_instructor'] = True
+    
+    if check_student(request):
+        student = Student.objects.get(user = request.user)
+        try:
+            Participants.objects.get(course=course,student=student)
+        except:
+            context['can_register'] = True
+
     return render(request,'Users/course_desc.html',context=context)
 
 
@@ -72,7 +90,7 @@ def logout_user(request):
     return HttpResponseRedirect(reverse('Users:index'))
 
 @login_required
-def register_new_course(request):
+def create_new_course(request):
     # Handle auth logic
     if not check_instructor(request):
         return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
@@ -97,7 +115,7 @@ def register_new_course(request):
 
 
 
-    return render(request,'Users/register_new_course.html',context=context)
+    return render(request,'Users/create_new_course.html',context=context)
 
 @login_required
 def edit_course(request,course_id):
@@ -146,3 +164,19 @@ def my_courses(request):
         context['is_instructor'] = True
 
     return render(request,'Users/view_my_courses.html',context=context)
+
+@login_required
+def register_for_course(request,course_id):
+    if not check_student(request):
+        return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
+    
+    course = get_object_or_404(Course,id=course_id)
+    student = Student.objects.get(user = request.user)
+    try:
+        Participants.objects.get(course = course, student = student)
+        return render(request,'Users/error.html',{'error':"You are already registered for this course"})
+    
+    except:
+        Participants.objects.create(course=course, student=student)
+
+    return HttpResponseRedirect(reverse('Users:my_courses'))

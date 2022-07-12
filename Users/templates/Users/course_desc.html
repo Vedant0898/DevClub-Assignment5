@@ -10,4 +10,8 @@
     {% if is_instructor %}
         <a href="{% url 'Users:edit_course' course.id %}">Edit course</a>
     {% endif %}
+
+    {% if can_register %}
+        <a href="{% url 'Users:register_for_course' course.id %}">Register for this course</a>
+    {% endif %}
 {% endblock body %}

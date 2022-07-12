@@ -51,7 +51,7 @@ class Participants(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
-    verification_status = models.BooleanField()
+    verification_status = models.BooleanField(default=False)
 
     class Meta:
         verbose_name = 'Participant'
