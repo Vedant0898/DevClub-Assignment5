@@ -18,6 +18,8 @@
                 <a href="{% url 'Users:register_user' %}">Complete your registration</a>
             {% endif %}
             <br>
+            <a href="{% url 'Users:view_profile' user.username %}">View Profile</a>
+            <br>
             <a href="{% url 'Users:logout' %}">Logout</a>
             <br>
             <a href="{% url 'Users:my_courses' %}">View my courses</a>

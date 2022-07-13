@@ -1,0 +1,17 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Profile page</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>{{person.first_name}} {{person.last_name}}</h1>
+    <h3>{{person.email}} ({{person.user.username}}) </h3>
+    
+    <p>About section:</p>
+    <p>{{person.about | linebreaks}}</p>
+    {% if is_owner %}
+        <a href="{% url 'Users:edit_profile' %}">Edit Profile</a>
+    {% endif %}
+
+{% endblock body %}

@@ -1,5 +1,6 @@
 from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.forms import AuthenticationForm,UserCreationForm
+from django.contrib.auth.models import User
 from django.contrib.auth import login,logout,authenticate
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -285,3 +286,75 @@ def register_instructor(request):
     context = {'form':form}
 
     return render(request,'Users/register_instructor.html',context=context)
+
+def view_profile(request,user_name):
+    user = User.objects.get(username = user_name)
+
+    if (user.student_set.all().exists()):
+        #user is student
+        stu = Student.objects.get(user = user)
+        is_owner = False
+        if request.user.is_authenticated and user==request.user:
+            is_owner = True
+        context = {'person':stu,'is_owner':is_owner}
+        return render(request,'Users/profile_reg_users.html',context=context)
+
+    elif (user.instructor_set.all().exists()):
+        #user is instr
+        # request.session['role'] = 'instructor'
+        instr = Instructor.objects.get(user=user)
+        is_owner = False
+        if request.user.is_authenticated and user==request.user:
+            is_owner = True
+        context = {'person':instr,'is_owner':is_owner}
+        return render(request,'Users/profile_reg_users.html',context=context)
+
+    # else
+    is_staff = False
+    if user.is_staff:
+        #reg incomplete
+        is_staff = True
+    is_owner = False
+    if request.user.is_authenticated and user==request.user:
+        is_owner = True
+    context = {'is_owner':is_owner,'is_staff':is_staff,'person':user}
+    return render(request,'Users/profile_other.html',context=context)
+
+
+@login_required
+def edit_profile(request):
+    if 'role' not in request.session or 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    if request.session['role']=='student':
+        stu = Student.objects.get(user=request.user)
+
+        if request.method != 'POST':
+            form = StudentRegistrationForm(instance = stu)
+        else:
+            form = StudentRegistrationForm(instance=stu,data=request.POST)
+
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('Users:view_profile',args=[request.user.username]))
+        
+        context = {'form':form,'person':stu}
+        return render(request,'Users/edit_profile.html',context=context)
+    
+    elif request.session['role']=='instructor':
+        instr = Instructor.objects.get(user=request.user)
+
+        if request.method != 'POST':
+            form = InstructorRegistrationForm(instance = instr)
+        else:
+            form = InstructorRegistrationForm(instance=instr,data=request.POST)
+
+            if form.is_valid():
+                form.save()
+                return HttpResponseRedirect(reverse('Users:view_profile',args=[request.user.username]))
+        
+        context = {'form':form,'person':instr}
+        return render(request,'Users/edit_profile.html',context=context)
+
+    else:
+        return HttpResponseRedirect(reverse('Users:index'))

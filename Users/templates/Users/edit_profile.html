@@ -1,0 +1,14 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Edit Profile</title>
+{% endblock head %}
+
+{% block body %}
+    <p>{{person.user.username}} </p>
+    <form method="post" action="{% url 'Users:edit_profile' %}">
+        {% csrf_token %}
+        {{form.as_p}}
+        <button name="submit">Save changes</button>
+    </form>
+{% endblock body %}
