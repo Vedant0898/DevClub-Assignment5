@@ -1,0 +1,36 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Participants</title>
+{% endblock head %}
+
+{% block body %}
+    <p>
+        Participants of <a href="{% url 'Users:course' course.id %}"> {{course.subject}}{{course.course_code}} ({{course.year}}-{{course.sem}})</a>
+    </p>
+    <ul>
+        <li> List of verified participants</li>
+        {% for p in pt %}
+            {% if p.verification_status %}
+                <li>
+                    <a href="{% url 'Users:view_profile' p.student.user.username %}"> {{p.student.first_name}} {{p.student.last_name}}</a>
+                </li>
+            {% endif %}
+
+        {% endfor %}
+
+    </ul>
+    <ul>
+        <li>List of unverified participants</li>
+        {% for p in pt %}
+            {% if not p.verification_status %}
+                <li>
+                    <a href="{% url 'Users:view_profile' p.student.user.username %}"> {{p.student.first_name}} {{p.student.last_name}}</a>
+                </li>
+            {% endif %}
+        
+        {% empty %}
+            <li>No students in this course</li>
+        {% endfor %}
+    </ul>
+{% endblock body %}

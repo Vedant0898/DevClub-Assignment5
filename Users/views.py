@@ -358,3 +358,12 @@ def edit_profile(request):
 
     else:
         return HttpResponseRedirect(reverse('Users:index'))
+
+def view_participants(request,course_id):
+    course = get_object_or_404(Course, id = course_id)
+
+    participants = course.participants_set.all()
+
+    context = {'pt':participants,'course':course}
+
+    return render(request,'Users/view_participants.html',context=context)

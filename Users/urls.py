@@ -24,4 +24,7 @@ urlpatterns = [
     #profile
     path('profile/<slug:user_name>',views.view_profile,name = 'view_profile'),
     path('edit/profile',views.edit_profile,name='edit_profile'),
+
+    #participants
+    path('participants/<slug:course_id>', views.view_participants,name='view_participants'),
 ]

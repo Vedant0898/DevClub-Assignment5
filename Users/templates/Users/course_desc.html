@@ -7,10 +7,14 @@
 {% block body %}
     <h1>{{course.subject}}{{course.course_code}}</h1>
     <p>{{course.course_description}} </p>
+    <p>
+        <a href="{% url 'Users:view_participants' course.id %}">View Participants</a>
+    </p>
+    
     {% if is_instructor %}
         <a href="{% url 'Users:edit_course' course.id %}">Edit course</a>
     {% endif %}
-
+    
     {% if can_register %}
         <a href="{% url 'Users:register_for_course' course.id %}">Register for this course</a>
     {% endif %}
