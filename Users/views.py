@@ -81,6 +81,11 @@ def login_user(request):
                 request.session['role'] = 'student'
             elif (user.instructor_set.all().exists()):
                 request.session['role'] = 'instructor'
+                instr = Instructor.objects.get(user=user)
+
+                if instr.verification_status==False:
+                    request.session['instr_not_verified'] = True
+
             elif not user.is_staff:
                 request.session['registration_incomplete'] = True
             
@@ -94,6 +99,9 @@ def logout_user(request):
         del request.session['role']
     if 'registration_incomplete' in request.session:
         del request.session['registration_incomplete']
+    if 'instr_not_verified' in request.session:
+        del request.session['instr_not_verified']
+
     logout(request)
     return HttpResponseRedirect(reverse('Users:index'))
 
@@ -103,6 +111,9 @@ def create_new_course(request):
     if not check_instructor(request):
         return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
 
+    if 'instr_not_verified' in request.session:
+        return render(request,'Users/error.html',{'error':"You are not verified as an instructor"})
+ 
     instr = Instructor.objects.get(user=request.user)
     if request.method != 'POST':
         # Create a form with some prefilled data
@@ -130,6 +141,9 @@ def edit_course(request,course_id):
     """Allows instructor to edit their own courses"""
     if not check_instructor(request):
         return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    if 'instr_not_verified' in request.session:
+        return render(request,'Users/error.html',{'error':"You are not verified as an instructor"})
 
     instr = Instructor.objects.get(user=request.user)
     course = get_object_or_404(Course,id=course_id)
@@ -264,6 +278,7 @@ def register_instructor(request):
             
             del request.session['registration_incomplete']
             request.session['role'] = 'instructor'
+            request.session['instr_not_verified'] = True
 
             return HttpResponseRedirect(reverse('Users:index'))
 
