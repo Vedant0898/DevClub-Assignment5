@@ -7,7 +7,17 @@ class Instructor(models.Model):
     """Model for Instructor"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField()
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    date_of_birth = models.DateField()
+    date_joined = models.DateField(auto_now_add=True)
+    about = models.TextField(null=True,blank=True)
+    
     verification_status = models.BooleanField(default=False)
+
+    
+    class Meta:
+        ordering = ['first_name', 'last_name']
 
     def __str__(self):
         s = f'{self.user} ({self.email})'
@@ -17,6 +27,14 @@ class Student(models.Model):
     """Model for Student"""
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     email = models.EmailField()
+    first_name = models.CharField(max_length=30)
+    last_name = models.CharField(max_length=30)
+    date_of_birth = models.DateField()
+    date_joined = models.DateField(auto_now_add=True)
+    about = models.TextField(null=True,blank=True)
+
+    class Meta:
+        ordering = ['first_name', 'last_name']
 
     def __str__(self):
         s = f'{self.user} ({self.email})'

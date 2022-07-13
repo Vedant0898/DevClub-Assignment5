@@ -7,13 +7,36 @@
 {% block body %}
     <p>Details of all courses</p>
     <ul>
+        <li>Details of verified courses</li>
         {% for p in pt %}
-            <li>
-                <a href="{% url 'Users:course' p.course.id %}"> {{p.course.subject}}{{p.course.course_code}} ({{p.course.year}}-{{p.course.sem}})</a>
-            </li>
-        
+            {% if p.verification_status %}
+                <li>
+                    <a href="{% url 'Users:course' p.course.id %}"> {{p.course.subject}}{{p.course.course_code}} ({{p.course.year}}-{{p.course.sem}})</a>
+                </li>
+            {% endif %}
         {% empty %}
-            <li>You have not registered for any course</li>
+            <li>You have no verified courses</li>
+        {% endfor %}
+
+    </ul>
+    <ul>
+        <li>Courses pending verification</li>
+        {% for p in pt %}
+            {% if not p.verification_status %}
+                <li>
+                    <a href="{% url 'Users:course' p.course.id %}"> {{p.course.subject}}{{p.course.course_code}} ({{p.course.year}}-{{p.course.sem}})</a>
+                </li>
+            {% endif %}
+        {% empty %}
+            <li>All your course registration are verified</li>
+        {% endfor %}
+
+    </ul>
+    <ul>
+        {% for p in pt %}
+            <!-- do nothing -->
+        {% empty %}
+            <li>No courses registered</li>
         {% endfor %}
 
     </ul>
