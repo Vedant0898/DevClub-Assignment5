@@ -14,6 +14,7 @@ from .forms import CourseForm, StudentRegistrationForm, InstructorRegistrationFo
 
 def check_instructor(request):
     """returns true if the user is instructor else false"""
+
     if 'role' not in request.session:
         return False
     if request.session['role']!='instructor':
@@ -24,6 +25,7 @@ def check_instructor(request):
 
 def check_student(request):
     """returns true if the user is student else false"""
+
     if 'role' not in request.session:
         return False
     if request.session['role']!='student':
@@ -34,9 +36,13 @@ def check_student(request):
 
 # Create your views here.
 def index(request):
+    """Index page"""
+
     return render(request,'Users/index.html')
 
 def course(request,course_id):
+    """individual course description"""
+
     course = Course.objects.get(id=course_id)
     context = {'course':course,'is_instructor':False,'can_register':False}
     if check_instructor(request):
@@ -55,6 +61,8 @@ def course(request,course_id):
 
 
 def courses(request):
+    """view all courses"""
+
     courses = Course.objects.all()
     context = {'courses':courses,'is_instructor':False}
     if 'role' in request.session and request.session['role']=='instructor':
@@ -63,6 +71,7 @@ def courses(request):
     return render(request,'Users/view_all_courses.html',context=context)
 
 def login_user(request):
+    """Login user and set appropriate role"""
 
     if request.user.is_authenticated:
         return HttpResponseRedirect(reverse('Users:index'))
@@ -96,6 +105,8 @@ def login_user(request):
     return render(request,'Users/login.html',context=context)
 
 def logout_user(request):
+    """Clear session and logout user"""
+
     if 'role' in request.session:
         del request.session['role']
     if 'registration_incomplete' in request.session:
@@ -108,7 +119,8 @@ def logout_user(request):
 
 @login_required
 def create_new_course(request):
-    # Handle auth logic
+    """Allow verified instructor to create new course"""
+    
     if not check_instructor(request):
         return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
 
@@ -140,6 +152,7 @@ def create_new_course(request):
 @login_required
 def edit_course(request,course_id):
     """Allows instructor to edit their own courses"""
+
     if not check_instructor(request):
         return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
 
@@ -168,7 +181,9 @@ def edit_course(request,course_id):
 
 @login_required
 def my_courses(request):
-    #create 2 separate templates for student and non student
+    """Displays the courses registered by student or the courses of instructor depending 
+    on role of user"""
+
     if 'role' not in request.session:
         courses = Course.objects.all()
     elif request.session['role']=='student':
@@ -190,6 +205,8 @@ def my_courses(request):
 
 @login_required
 def register_for_course(request,course_id):
+    """Allows student to register in course"""
+
     if not check_student(request):
         return render(request,'Users/error.html',{'error':"You are not authorised to access this page"})
     
@@ -205,7 +222,8 @@ def register_for_course(request,course_id):
     return HttpResponseRedirect(reverse('Users:my_courses'))
 
 def register_user(request):
-    
+    """New user registration step-1"""
+
     if request.user.is_authenticated and 'registration_incomplete' not in request.session:
         return HttpResponseRedirect(reverse('Users:index'))
 
@@ -230,6 +248,7 @@ def register_user(request):
 
 @login_required
 def register_student(request):
+    """New user registration step-2 for student"""
 
     if 'registration_incomplete' not in request.session:
         return HttpResponseRedirect(reverse('Users:index'))
@@ -259,7 +278,8 @@ def register_student(request):
 
 @login_required
 def register_instructor(request):
-    
+    """New user registration step-2 for instructor"""
+
     if 'registration_incomplete' not in request.session:
         return HttpResponseRedirect(reverse('Users:index'))
 
@@ -288,6 +308,8 @@ def register_instructor(request):
     return render(request,'Users/register_instructor.html',context=context)
 
 def view_profile(request,user_name):
+    """profile page for users"""
+
     user = User.objects.get(username = user_name)
 
     if (user.student_set.all().exists()):
@@ -323,6 +345,8 @@ def view_profile(request,user_name):
 
 @login_required
 def edit_profile(request):
+    """edit profile for students and instructors"""
+
     if 'role' not in request.session or 'registration_incomplete' in request.session:
         return HttpResponseRedirect(reverse('Users:index'))
     
@@ -360,6 +384,8 @@ def edit_profile(request):
         return HttpResponseRedirect(reverse('Users:index'))
 
 def view_participants(request,course_id):
+    """display participants of a given course"""
+
     course = get_object_or_404(Course, id = course_id)
 
     participants = course.participants_set.all()
