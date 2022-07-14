@@ -44,7 +44,7 @@ def course(request,course_id):
     """individual course description"""
 
     course = Course.objects.get(id=course_id)
-    context = {'course':course,'is_instructor':False,'can_register':False}
+    context = {'course':course,'is_instructor':False,'can_register':False,'registered':False}
     if check_instructor(request):
         instr = Instructor.objects.get(user=request.user)
         if course.instructor==instr:
@@ -54,6 +54,7 @@ def course(request,course_id):
         student = Student.objects.get(user = request.user)
         try:
             Participants.objects.get(course=course,student=student)
+            context['registered'] = True
         except:
             context['can_register'] = True
 

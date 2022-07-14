@@ -1,0 +1,20 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Grade</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        <a href="{% url 'Users:course' course.id %}">{{course.subject}}{{course.course_code}}</a>
+
+        </h1>
+    <h3> 
+        Grade for student <a href="{% url 'Users:view_profile' student.user.username %}">{{student.first_name}} {{student.last_name}}</a>
+    </h3>
+    {% if grade_available %}
+        <h2>{{grade.grade}}</h2>
+    {% else %}
+        <h4>Grade not available</h4>
+    {% endif %}
+{% endblock body %}

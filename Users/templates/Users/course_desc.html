@@ -11,6 +11,10 @@
         <a href="{% url 'Users:view_participants' course.id %}">View Participants</a>
     </p>
     
+    {% if registered %}
+        <a href="{% url 'Grades:course_grade' course.id %}">View Grades</a>
+    {% endif %}
+    
     {% if is_instructor %}
         <a href="{% url 'Users:edit_course' course.id %}">Edit course</a>
     {% endif %}
