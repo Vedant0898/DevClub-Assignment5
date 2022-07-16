@@ -22,6 +22,7 @@ class Assignment(models.Model):
     due_date = models.DateTimeField()
 
     info = models.TextField(blank=True,null=True)
+    resources = models.FileField(upload_to='assignment_resources/',null=True,blank=True)
     maximum_marks = models.IntegerField(default=100)
     weightage = models.DecimalField(default=100.0,max_digits=5,decimal_places=2)
 

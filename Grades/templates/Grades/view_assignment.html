@@ -1,0 +1,53 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Grade</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        {{a.assignment_name}} of {{course.subject}}{{course.course_code}}
+    </h1>
+    {% if is_instructor %}
+        <a href="{% url 'Grades:edit_assignment' a.id %}">Edit assignment</a>
+    {% endif %}
+    <p>
+        <a href="{% url 'Grades:all_assignments' course.id %}">View all assignments</a>
+    </p>
+    <p>
+        Duration from {{a.start_date}} to {{a.due_date}}
+    </p>
+    <p> Maximum Marks: {{a.maximum_marks}}</p>
+    <p>
+        {{a.info | linebreaks}}
+    </p>
+    {% if a.resources %}
+        <p>
+            <a href="{{ a.resources.url }}"> Resources </a>
+        </p>
+    {% endif %}
+    {% if not is_instructor %}
+        {% if a_sub %}
+            <a href="{{ a_sub.file.url }}"> View Submitted assignment</a>
+            <a href=""> Resubmit assignment</a>
+        {% else %}
+            <a href=""> Submit assignment</a>
+        {% endif %}
+    
+    {% else %}
+        <p>
+            <a href="{% url 'Grades:delete_assignment' a.id %}" class="confirmation">Delete assignment</a>
+            
+            <!-- js confirm box  -->
+            <script type="text/javascript">
+                var elems = document.getElementsByClassName('confirmation');
+                var confirmIt = function (e) {
+                    if (!confirm('Are you sure?')) e.preventDefault();
+                };
+                for (var i = 0, l = elems.length; i < l; i++) {
+                    elems[i].addEventListener('click', confirmIt, false);
+                }
+            </script>
+        </p>
+    {% endif %}
+{% endblock body %}

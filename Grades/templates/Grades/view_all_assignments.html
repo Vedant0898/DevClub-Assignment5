@@ -1,0 +1,27 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Assignments</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        Assignments for {{course.subject}}{{course.course_code}}
+    </h1>
+    
+    <ul>
+    {% for assgmt in assignments %}
+        <li>
+            <a href="{% url 'Grades:view_assignment' assgmt.id %}"> {{assgmt.assignment_name}} </a>
+        </li>
+    {% empty %}
+        <li> No assignments have been added yet</li>
+    {% endfor %}
+
+    {% if is_instructor %}
+        <li>
+            <a href="{% url 'Grades:create_assignment' course.id %}">Create new assignment</a>
+        </li>
+    {% endif %}
+    </ul>
+{% endblock body %}
