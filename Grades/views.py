@@ -5,7 +5,7 @@ from django.urls import reverse
 
 from Users.models import Course, Student, Instructor, Participants
 from .models import Grade, Assignment, AssignmentSubmission
-from .forms import AssignmentForm
+from .forms import AssignmentForm,AssignmentSubmissionForm
 # Create your views here.
 
 
@@ -216,3 +216,87 @@ def delete_assignment(request,assignment_id):
     assnment.delete()
 
     return HttpResponseRedirect(reverse('Grades:all_assignments',args=[course.id]))
+
+@login_required
+def submit_assignment(request,assignment_id):
+    """Student can submit assignment"""
+
+    
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    if not check_student(request):
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    stu = Student.objects.get(user = request.user)
+    assnment = Assignment.objects.get(id = assignment_id)
+
+    try:
+        pt = Participants.objects.get(course = assnment.course,student=stu)
+    except:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    if request.method!='POST':
+        # display new form
+        form = AssignmentSubmissionForm()
+    
+    else:
+        form = AssignmentSubmissionForm(data = request.POST,files = request.FILES)
+
+        if form.is_valid():
+            new_submission = form.save(commit=False)
+
+            new_submission.student = stu
+            new_submission.assignment = assnment
+
+            new_submission.save()
+
+            return HttpResponseRedirect(reverse('Grades:view_assignment',args=[assignment_id]))
+
+    context = {'form':form,'a':assnment}
+
+    return render(request,'Grades/submit_assignment.html',context=context)
+
+
+@login_required
+def resubmit_assignment(request,assignment_id):
+    """Student can REsubmit assignment"""
+
+    
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    if not check_student(request):
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    stu = Student.objects.get(user = request.user)
+    assnment = Assignment.objects.get(id = assignment_id)
+    
+    try:
+        a_sub = AssignmentSubmission.objects.get(assignment = assnment, student = stu )
+    except:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    try:
+        pt = Participants.objects.get(course = a_sub.assignment.course,student=stu)
+    except:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    if request.method!='POST':
+        # display new form
+        form = AssignmentSubmissionForm(instance = a_sub)
+    
+    else:
+        form = AssignmentSubmissionForm(data = request.POST,files = request.FILES,instance = a_sub)
+
+        if form.is_valid():
+            form.save()
+
+            if len(request.FILES)==0:
+                a_sub.delete()
+
+            return HttpResponseRedirect(reverse('Grades:view_assignment',args=[assignment_id]))
+
+    context = {'form':form,'a_sub':a_sub,'a':assnment}
+
+    return render(request,'Grades/resubmit_assignment.html',context=context)

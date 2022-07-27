@@ -23,15 +23,15 @@
     </p>
     {% if a.resources %}
         <p>
-            <a href="{{ a.resources.url }}"> Resources </a>
+            <a href="{{ a.resources.url }}"> {{a.resource_display_name}} </a>
         </p>
     {% endif %}
     {% if not is_instructor %}
         {% if a_sub %}
             <a href="{{ a_sub.file.url }}"> View Submitted assignment</a>
-            <a href=""> Resubmit assignment</a>
+            <a href="{% url 'Grades:resubmit_assignment' a.id %}"> Resubmit assignment</a>
         {% else %}
-            <a href=""> Submit assignment</a>
+            <a href="{% url 'Grades:submit_assignment' a.id %}"> Submit assignment</a>
         {% endif %}
     
     {% else %}

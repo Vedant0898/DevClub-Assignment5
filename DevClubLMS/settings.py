@@ -41,6 +41,9 @@ INSTALLED_APPS = [
     # My apps
     'Users.apps.UsersConfig',
     'Grades.apps.GradesConfig',
+
+    #Cleanup
+    'django_cleanup.apps.CleanupConfig',
 ]
 
 MIDDLEWARE = [
