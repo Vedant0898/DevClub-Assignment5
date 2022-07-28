@@ -19,3 +19,11 @@ class AssignmentSubmissionForm(forms.ModelForm):
     class Meta:
         model = AssignmentSubmission
         exclude = ('assignment','student','is_graded','marks_obtained',)
+
+class AssignmentGradingForm(forms.ModelForm):
+    """form for grading an assignment"""
+
+    class Meta:
+        model = AssignmentSubmission
+        exclude = ('is_graded','assignment','student','file',)
+        

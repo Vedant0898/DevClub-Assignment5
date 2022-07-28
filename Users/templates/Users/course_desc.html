@@ -20,6 +20,10 @@
     {% if is_instructor %}
         <a href="{% url 'Grades:all_assignments' course.id %}">View Assignments</a>
         <br>
+        <a href="{% url 'Grades:calculate_total_grade' course.id %}">Calculate Total Grades</a>
+        <br>
+        <a href="{% url 'Grades:view_total_grade_instr' course.id %}">View Total Grades</a>
+        <br>
         <a href="{% url 'Users:edit_course' course.id %}">Edit course</a>
     {% endif %}
     

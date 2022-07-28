@@ -1,0 +1,51 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Grade Assignment</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        Viewing submissions of {{a.assignment_name}} of {{a.course.subject}}{{a.course.course_code}}
+    </h1>
+    {% if stats %}
+        <h4>
+            Stats:
+            <p>Mean: {{stats.mean}} </p>
+            <p>Standard Deviation: {{stats.stdev}} </p>
+            <p>Max: {{stats.max}} </p>
+            <p>Median: {{stats.median}} </p>
+        </h4>
+    {% endif %}
+    <ul>
+        <li>Graded submissions</li>
+        {% for a_sub in a_subs %}
+            {% if a_sub.is_graded %}
+                <li>
+                    <a href="{% url 'Grades:grade_assignment' a_sub.id %}">
+                        {{a_sub.student}}
+                    </a>
+                    <b>Marks: {{a_sub.marks_obtained}}/{{a.maximum_marks}} </b>
+                </li>
+            {% endif %}
+        {% empty %}
+            <li>
+                No assignment submissions found
+            </li>
+        {% endfor %}
+    </ul>
+    <br>
+    <ul>
+        <li>Ungraded Submissions</li>
+        {% for a_sub in a_subs %}
+            {% if not a_sub.is_graded %}
+                <li>
+                    <a href="{% url 'Grades:grade_assignment' a_sub.id %}">
+                        {{a_sub.student}}
+                    </a>
+                </li>
+            {% endif %}
+        
+        {% endfor %}
+    </ul>
+{% endblock body %}

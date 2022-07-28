@@ -2,10 +2,11 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
+import statistics
 
 from Users.models import Course, Student, Instructor, Participants
 from .models import Grade, Assignment, AssignmentSubmission
-from .forms import AssignmentForm,AssignmentSubmissionForm
+from .forms import AssignmentForm,AssignmentSubmissionForm, AssignmentGradingForm
 # Create your views here.
 
 
@@ -29,7 +30,33 @@ def check_student(request):
         return False
     
     return True
+
+def get_stats(data):
+    if len(data)==0:
+        return None
+    if len(data)==1:
+        stats = {
+            'mean':data[0],
+            'median':data[0],
+            'max':data[0],
+            'stdev':0
+        }
+        return stats
+    data.sort()
+    mean = statistics.mean(data)
+    median = statistics.median(data)
+    maximum = max(data)
+    stdev = statistics.stdev(data,mean)
+
+    stats = {
+        'mean':round(mean,2),
+        'median':round(median,2),
+        'max':round(maximum,2),
+        'stdev':round(stdev,2)
+        }
     
+    return stats
+
 
 @login_required
 def course_grade(request,course_id):
@@ -300,3 +327,151 @@ def resubmit_assignment(request,assignment_id):
     context = {'form':form,'a_sub':a_sub,'a':assnment}
 
     return render(request,'Grades/resubmit_assignment.html',context=context)
+
+
+@login_required
+def grade_assignment(request,a_sub_id):
+    """Instructor can grade an assignment"""
+
+    
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    if not check_instructor(request):
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    instr = Instructor.objects.get(user=request.user)
+    a_sub = AssignmentSubmission.objects.get(id=a_sub_id)
+
+    if a_sub.assignment.course.instructor!=instr:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+
+    if request.method != 'POST':
+        form = AssignmentGradingForm(instance=a_sub)
+    
+    else:
+        form = AssignmentGradingForm(data = request.POST, instance=a_sub)
+
+        if form.is_valid():
+            grade = form.save(commit=False)
+            grade.is_graded = True
+            if (grade.marks_obtained>a_sub.assignment.maximum_marks):
+                grade.marks_obtained = a_sub.assignment.maximum_marks
+            elif grade.marks_obtained<0:
+                grade.marks_obtained=0
+            grade.save()
+
+            return HttpResponseRedirect(reverse('Grades:view_all_assignment_submission',args=[a_sub.assignment.id]))
+    context = {'form':form,'a_sub':a_sub,'a':a_sub.assignment}
+    
+    return render(request,'Grades/grade_assignment.html',context=context)
+
+
+@login_required
+def view_all_assignment_submission(request,assignment_id):
+    """View all graded and ungraded assignment submissions for instructor"""
+
+    
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    if not check_instructor(request):
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    instr = Instructor.objects.get(user=request.user)
+    assnment = Assignment.objects.get(id=assignment_id)
+
+    if assnment.course.instructor!=instr:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    a_subs = assnment.assignmentsubmission_set.all()
+
+    data = [sub.marks_obtained for sub in a_subs.filter(is_graded=True)]
+    context = {'a':assnment,'a_subs':a_subs,'stats':get_stats(data)}
+    return render(request,'Grades/view_all_assignment_submission.html',context = context)
+
+
+@login_required
+def calculate_total_grade(request,course_id):
+    """Instructor can release total grade of a course"""
+
+    
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    if not check_instructor(request):
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    instr = Instructor.objects.get(user=request.user)
+    course = Course.objects.get(id=course_id)
+
+    if course.instructor!=instr:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    pt = course.participants_set.all()
+    assgnments = Assignment.objects.filter(course=course)
+    den = sum([assmt.weightage for assmt in assgnments])
+
+    if den==0:
+        return render(request, 'Users/error.html',{'error':"No assignment found to grade."})
+
+    a_subs_all = AssignmentSubmission.objects.filter(assignment__in = assgnments)
+
+    for obj in pt:
+        stu = obj.student
+        
+        a_subs = a_subs_all.filter(student=stu)
+        num = sum([a_sub.marks_obtained*a_sub.assignment.weightage for a_sub in a_subs if a_sub.is_graded])
+
+        try:
+            g = Grade.objects.get(student=stu,course=course)
+        except:
+            g = Grade(student=stu,course = course)
+        
+        g.grade = round(num/den,2)
+
+        g.save()
+    
+    #announcement to be added later
+    
+    return HttpResponseRedirect(reverse('Users:course',args=[course_id]))
+    
+
+@login_required
+def view_total_grades_instr(request,course_id):
+    """Instructor can view stats of all assignments of that course"""
+    
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    if not check_instructor(request):
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    instr = Instructor.objects.get(user=request.user)
+    course = Course.objects.get(id=course_id)
+
+    if course.instructor!=instr:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    context = {'course':course,'ass_stats':None}
+
+    assgnments = Assignment.objects.filter(course=course)
+    ass_stats = {}
+    total_weightage=0
+    for ass in assgnments:
+        a_subs = ass.assignmentsubmission_set.all()
+        data = [sub.marks_obtained for sub in a_subs.filter(is_graded=True)]
+        stats = get_stats(data)
+        total_weightage+=ass.weightage
+        ass_stats[ass]=stats
+    
+    grades = course.grade_set.all()
+    data = [g.grade for g in grades if g.grade]
+    g_stats = get_stats(data)
+    context['ass_stats'] = ass_stats
+    context['g_stats'] =  g_stats
+    context['total_weightage'] = total_weightage
+    print(context)
+    return render(request,'Grades/view_grades_instr.html',context=context)
+
