@@ -16,7 +16,7 @@ urlpatterns = [
     path('assignment/submissions/<slug:assignment_id>',views.view_all_assignment_submission,name='view_all_assignment_submission'),
     path('calc_total_grade/<slug:course_id>',views.calculate_total_grade,name='calculate_total_grade'),
     path('view_grade/<slug:course_id>',views.view_total_grades_instr,name='view_total_grade_instr'),
-
-
+    path('view_marks/<slug:course_id>',views.view_course_grade_student,name='view_course_grade_student'),
+    path('view_all',views.view_all_grades_student,name = 'view_all_grades_student'),
 
 ]

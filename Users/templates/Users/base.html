@@ -23,6 +23,11 @@
             <a href="{% url 'Users:logout' %}">Logout</a>
             <br>
             <a href="{% url 'Users:my_courses' %}">View my courses</a>
+            
+            {% if request.session.role == 'student' %}
+                <br>
+                <a href="{% url 'Grades:view_all_grades_student' %}">View All Grades</a>
+            {% endif %}
 
         {% else %}
             <a href="{% url 'Users:login' %}">Login</a>

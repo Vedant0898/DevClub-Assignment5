@@ -11,7 +11,7 @@ class Grade(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
 
     grade = models.DecimalField(blank=True,null=True, max_digits=5,decimal_places=2)
-
+    # graded_manually = models.BooleanField(default=False)
     def __str__(self):
         return f'{self.course} # {self.student}'
 

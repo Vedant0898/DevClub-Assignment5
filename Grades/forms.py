@@ -1,7 +1,7 @@
 from django import forms
 from django.contrib.admin import widgets
 
-from .models import Assignment, AssignmentSubmission
+from .models import Assignment, AssignmentSubmission, Grade
 
 class AssignmentForm(forms.ModelForm):
     """form for assignment creation/editing"""
@@ -26,4 +26,3 @@ class AssignmentGradingForm(forms.ModelForm):
     class Meta:
         model = AssignmentSubmission
         exclude = ('is_graded','assignment','student','file',)
-        

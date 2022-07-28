@@ -1,0 +1,100 @@
+{% extends "Users/base.html" %}
+{% load mathfilters %}
+
+{% block head %}
+    <title>View all Grades</title>
+    <style>
+        table {
+          font-family: arial, sans-serif;
+          border-collapse: collapse;
+          width: 90%;
+        }
+        
+        td, th {
+          border: 1px solid #151515;
+          text-align: left;
+          padding: 8px;
+        }
+        
+        tr:nth-child(even) {
+          background-color: #dddddd;
+        }
+    </style>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        Viewing total grades of {{course.subject}}{{course.course_code}}
+    </h1>
+    
+    
+    <table>
+        <tr>
+            <th>Assignment name</th>
+            <th>Maximum Marks</th>
+            <th>Marks Obtained</th>
+            <th>Assignment Weightage</th>
+            <th>Mean</th>
+            <th>Standard Deviation</th>
+            <th>Median</th>
+            <th>Maximum</th>
+        </tr>
+
+        {% for key,val in ass_stats.items %}
+            <tr>
+                
+                <td>{{key.assignment_name}}</td>
+                <td>{{key.maximum_marks}}</td>
+                {% if val.marks_obtained %}
+                    <td>{{val.marks_obtained}}</td>
+                {% else %}
+                    <td>-</td>
+                {% endif %}
+                {% if total_weightage != 0 %}
+                    <td>{{key.weightage|div:total_weightage|mul:100|floatformat:2}}%</td>
+                {% else %}
+                    <td>0%</td>
+                {% endif %}
+                {% if val.mean %}
+                    <td>{{val.mean}}</td>
+                    <td>{{val.stdev}}</td>
+                    <td>{{val.median}}</td>
+                    <td>{{val.max}}</td>
+                {% else %}
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                    <td>-</td>
+                {% endif %}
+            </tr>
+        {% empty %}
+        <p>No assignments found</p>
+        {% endfor %}
+
+        <tr>
+            <td><b>Total</b></td>
+            <td><b>100</b></td>
+            {% if grade %}
+                <td><b>{{grade}}</b></td>
+            {% else %}
+                <td><b>-</b></td>
+            {% endif %}
+            <td><b>-</b></td>
+            {% if g_stats.mean %}
+                <td><b>{{g_stats.mean}}</b></td>
+                <td><b>{{g_stats.stdev}}</b></td>
+                <td><b>{{g_stats.median}}</b></td>
+                <td><b>{{g_stats.max}}</b></td>
+            {% else %}
+                <td><b>-</b></td>
+                <td><b>-</b></td>
+                <td><b>-</b></td>
+                <td><b>-</b></td>
+            {% endif %}
+            
+        </tr>
+
+    </table>
+
+
+{% endblock body %}

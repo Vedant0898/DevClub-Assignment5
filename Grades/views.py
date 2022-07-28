@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.decorators import login_required
+from django.forms import formset_factory
 from django.urls import reverse
 import statistics
 
@@ -472,6 +473,79 @@ def view_total_grades_instr(request,course_id):
     context['ass_stats'] = ass_stats
     context['g_stats'] =  g_stats
     context['total_weightage'] = total_weightage
-    print(context)
     return render(request,'Grades/view_grades_instr.html',context=context)
 
+@login_required
+def view_course_grade_student(request,course_id):
+    """Student can view grade of a course"""
+
+    
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    if not check_student(request):
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    stu = Student.objects.get(user = request.user)
+    course = Course.objects.get(id = course_id)
+
+    try:
+        pt = Participants.objects.get(course = course,student=stu)
+    except:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    context = {'course':course,'ass_stats':None}
+
+    assgnments = Assignment.objects.filter(course=course)
+    ass_stats = {}
+    total_weightage=0
+    for ass in assgnments:
+        a_subs = ass.assignmentsubmission_set.all()     #all ass. sub. for this ass.
+        data = [sub.marks_obtained for sub in a_subs.filter(is_graded=True)]
+        stats = get_stats(data)
+        try:
+            stats['marks_obtained'] = a_subs.filter(student = stu)[0].marks_obtained
+        except:
+            pass
+        total_weightage+=ass.weightage
+        ass_stats[ass]=stats
+    
+    grades = course.grade_set.all()
+    data = [g.grade for g in grades if g.grade]
+    g_stats = get_stats(data)
+    context['ass_stats'] = ass_stats
+    context['g_stats'] =  g_stats
+    context['total_weightage'] = total_weightage
+    try:
+        context['grade'] = grades.filter(student=stu)[0].grade
+    except:
+        pass
+    return render(request,'Grades/view_course_grades_student.html',context=context)
+
+
+@login_required
+def view_all_grades_student(request):
+    """Student can view grades for all registered courses"""
+
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    if not check_student(request):
+        return HttpResponseRedirect(reverse('Users:index'))
+    
+    stu = Student.objects.get(user = request.user)
+
+    pt = Participants.objects.filter(student=stu)
+    
+    grade = {}
+    for p in pt:
+        try:
+            g = Grade.objects.get(course = p.course,student=stu)
+            grade[p.course] = g
+        except:
+            grade[p.course] = None
+    
+    context = {'s':stu,'grades':grade}
+    print(context)
+
+    return render(request,'Grades/view_all_grades_student.html',context=context)

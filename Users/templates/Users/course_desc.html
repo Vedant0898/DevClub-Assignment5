@@ -14,7 +14,7 @@
     {% if registered %}
         <a href="{% url 'Grades:all_assignments' course.id %}">View Assignments</a>
         <br>
-        <a href="{% url 'Grades:course_grade' course.id %}">View Grades</a>
+        <a href="{% url 'Grades:view_course_grade_student' course.id %}">View Grades</a>
     {% endif %}
     
     {% if is_instructor %}
