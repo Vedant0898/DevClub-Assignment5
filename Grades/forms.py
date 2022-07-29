@@ -1,5 +1,4 @@
 from django import forms
-from django.contrib.admin import widgets
 
 from .models import Assignment, AssignmentSubmission, Grade
 

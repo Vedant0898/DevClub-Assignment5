@@ -1,0 +1,53 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Direct Message</title>
+{% endblock head %}
+
+{% block body %}
+    <p>
+        All messages for <a href="{% url 'Users:view_profile' user.username %}">{{user.username}} </a>
+    </p>
+    <p>
+        <a href="{% url 'Comms:send_dm' %}">Send new message</a>
+    </p>
+    <ul>
+        <li> <b>List of received messages</b></li>
+        {% for m in rm %}
+            <li>
+                <p>
+                    From: <a href="{% url 'Users:view_profile' m.sender.username %}">{{m.sender.username}} </a>
+                </p>
+                <p>Time: {{m.time_sent}} </p>
+                <p>
+                    <b>{{m.title}}</b>
+                </p>
+                <p>
+                    {{m.text}}
+                </p>
+            </li>
+        {% empty %}
+            <li>No message received</li>
+        {% endfor %}
+
+    </ul>
+    <ul>
+        <li><b>List of sent messages</b></li>
+        {% for m in sm %}
+            <li>
+                <p>
+                    To: <a href="{% url 'Users:view_profile' m.receiver.username %}">{{m.receiver.username}} </a>
+                </p>
+                <p>Time: {{m.time_sent}} </p>
+                <p>
+                    <b>{{m.title}}</b>
+                </p>
+                <p>
+                    {{m.text}}
+                </p>
+            </li>
+        {% empty %}
+            <li>No message received</li>
+        {% endfor %}
+    </ul>
+{% endblock body %}

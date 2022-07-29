@@ -23,6 +23,7 @@ urlpatterns = [
     path('',include('Users.urls',namespace='users')),
     path('grades/',include('Grades.urls',namespace='Grades')),
     path('docs/',include('Documents.urls',namespace='Docs')),
+    path('comms/',include('Communications.urls',namespace='Comms')),
 ]
 
 if settings.DEBUG:

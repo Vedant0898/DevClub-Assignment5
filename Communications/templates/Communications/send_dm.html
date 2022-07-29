@@ -1,0 +1,16 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Send Direct Message</title>
+{% endblock head %}
+
+{% block body %}
+    
+    <form method="post" action="{% url 'Comms:send_dm' %}">
+        {% csrf_token %}
+        {{form.as_p}}
+
+        <button name="submit">Send</button>
+    </form>    
+
+{% endblock body %}

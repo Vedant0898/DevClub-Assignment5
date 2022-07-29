@@ -28,7 +28,8 @@
                 <br>
                 <a href="{% url 'Grades:view_all_grades_student' %}">View All Grades</a>
             {% endif %}
-
+            <br>
+            <a href="{% url 'Comms:view_dm' %}">View DMs</a>
         {% else %}
             <a href="{% url 'Users:login' %}">Login</a>
             <br>

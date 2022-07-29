@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'Users.apps.UsersConfig',
     'Grades.apps.GradesConfig',
     'Documents.apps.DocumentsConfig',
+    'Communications.apps.CommunicationsConfig',
 
     #Cleanup
     'django_cleanup.apps.CleanupConfig',
