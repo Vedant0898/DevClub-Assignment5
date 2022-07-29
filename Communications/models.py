@@ -13,7 +13,7 @@ class DiscussionForum(models.Model):
     time_posted = models.DateTimeField(auto_now_add=True)
     last_edit = models.DateTimeField(auto_now=True)
     is_pinned = models.BooleanField(default=False)
-
+    reply_to = models.ForeignKey('self',on_delete=models.CASCADE,null=True,blank=True,default=None)
     class Meta:
         ordering = ['-is_pinned','-time_posted']
 

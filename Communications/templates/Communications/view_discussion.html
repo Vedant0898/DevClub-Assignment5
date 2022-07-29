@@ -1,0 +1,66 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Discussion forum</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        Discussion forum of {{course.subject}}{{course.course_code}}
+    </h1>
+    
+    <ul>
+        
+        <li>
+            <a href="{% url 'Comms:add_discussion' course.id %}">Start new discussion</a>
+        </li>
+
+        {% for disc in discs %}
+            <li>
+                <a id="{{disc.id}}"></a>
+                {% if disc.reply_to %}
+                    <p>
+                        Reply to: <a href="#{{disc.reply_to.id}}">{{disc.reply_to.title}} (By: {{disc.reply_to.sender}})</a>
+                    </p>
+                {% endif %}
+                {% if disc.is_pinned %}
+                    <b>PINNED</b>
+                {% endif %}
+                <b> {{disc.title}} </b>
+                By: <a href="{% url 'Users:view_profile' disc.sender.username %}">{{disc.sender}}</a>
+                <p>
+                    {% if is_instructor %}
+                        {% if disc.is_pinned %}
+                            <a href="{% url 'Comms:change_pin_status' disc.id %}">Unpin</a>
+                        {% else %}
+                            <a href="{% url 'Comms:change_pin_status' disc.id %}">Pin</a>
+                        {% endif %}
+                        <br>
+                        <a href="{% url 'Comms:delete_discussion' disc.id %}" class="confirmation">Delete</a>
+                    {% endif %}
+                </p>
+                {% if disc.sender == request.user or is_instructor %}
+                    <a href="{% url 'Comms:edit_discussion' disc.id %}">Edit</a>
+                {% endif %}
+                <p>Posted on: {{disc.time_posted}} </p>
+                <p>Last edited on: {{disc.last_edit}} </p>
+                <p>
+                    {{disc.text}}
+                </p>
+            </li>
+        {% empty %}
+            <li> No discussion started yet.</li>
+        {% endfor %}
+        <!-- js confirm box  -->
+        <script type="text/javascript">
+            var elems = document.getElementsByClassName('confirmation');
+            var confirmIt = function (e) {
+                if (!confirm('Are you sure?')) e.preventDefault();
+            };
+            for (var i = 0, l = elems.length; i < l; i++) {
+                elems[i].addEventListener('click', confirmIt, false);
+            }
+        </script>
+
+    </ul>
+{% endblock body %}

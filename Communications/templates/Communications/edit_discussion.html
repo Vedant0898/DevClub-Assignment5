@@ -1,0 +1,18 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Edit discussion</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        Edit discussion for {{course.subject}}{{course.course_code}}
+    </h1>
+
+    <form method="post" action="{% url 'Comms:edit_discussion' disc.id %}" >
+        {% csrf_token %}
+        {{form.as_p}}
+
+        <button name="submit">Save</button>
+    </form>
+{% endblock body %}

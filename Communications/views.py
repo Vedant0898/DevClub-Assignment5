@@ -3,9 +3,9 @@ from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
-from .models import Announcement
+from .models import Announcement,DiscussionForum
 from Users.models import Course,Student,Instructor,Participants
-from .forms import MessageForm,AnnouncementForm
+from .forms import MessageForm,AnnouncementForm, DiscussionForumForm
 # Create your views here.
 
 
@@ -239,3 +239,183 @@ def edit_announcement(request,anc_id):
 
 
     return render(request,'Communications/edit_announcement.html',context=context)
+
+@login_required
+def view_discussion(request,course_id):
+    """Show all messages in discussion forum of a given course"""
+
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+
+    course = Course.objects.get(id=course_id)
+    context = {'is_instructor':False}
+
+    if check_instructor(request):
+        instr = Instructor.objects.get(user=request.user)
+        if course.instructor!=instr:
+            return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+        context['is_instructor']=True
+    
+    elif check_student(request):
+        stu = Student.objects.get(user=request.user)
+        try:
+            pt = Participants.objects.get(student = stu,course=course)
+        except:
+            return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    else:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    discs = DiscussionForum.objects.filter(course=course)
+    context['discs']=discs
+    context['course'] = course
+
+    return render(request,'Communications/view_discussion.html',context=context)
+
+
+@login_required
+def add_discussion(request,course_id):
+    """Add new discussion in discussion forum of a given course"""
+
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+
+    course = Course.objects.get(id=course_id)
+    context = {'is_instructor':False}
+
+    if check_instructor(request):
+        instr = Instructor.objects.get(user=request.user)
+        if course.instructor!=instr:
+            return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+        context['is_instructor']=True
+    
+    elif check_student(request):
+        stu = Student.objects.get(user=request.user)
+        try:
+            pt = Participants.objects.get(student = stu,course=course)
+        except:
+            return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    else:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    
+    if request.method!='POST':
+        form = DiscussionForumForm(course=course)
+    else:
+        form = DiscussionForumForm(course=course,data=request.POST)
+
+        if form.is_valid():
+            new_disc = form.save(commit=False)
+            new_disc.sender = request.user
+            new_disc.course = course
+            new_disc.save()
+
+            return HttpResponseRedirect(reverse('Comms:view_discussion',args=[course_id]))
+
+    context['course'] = course
+    context['form'] = form
+
+    return render(request,'Communications/add_discussion.html',context=context)
+
+
+
+@login_required
+def edit_discussion(request,disc_id):
+    """Edit a discussion in discussion forum of a given course by 
+    sender or instructor"""
+
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+
+    disc = DiscussionForum.objects.get(id = disc_id)
+    course = disc.course
+    context = {'is_instructor':False}
+
+    if check_instructor(request):
+        instr = Instructor.objects.get(user=request.user)
+        if course.instructor!=instr:
+            return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+        context['is_instructor']=True
+    
+    elif disc.sender==request.user:
+        stu = Student.objects.get(user=request.user)
+        try:
+            pt = Participants.objects.get(student = stu,course=course)
+        except:
+            return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    else:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    
+    if request.method!='POST':
+        form = DiscussionForumForm(course=course,instance=disc)
+    else:
+        form = DiscussionForumForm(course=course,instance=disc,data=request.POST)
+
+        if form.is_valid():
+            form.save()
+
+            return HttpResponseRedirect(reverse('Comms:view_discussion',args=[course.id]))
+
+    context['course'] = course
+    context['form'] = form
+    context['disc'] = disc
+
+    return render(request,'Communications/edit_discussion.html',context=context)
+
+@login_required
+def change_pin_status(request,disc_id):
+    """Instructor can pin or unpin a discussion"""
+
+    disc = DiscussionForum.objects.get(id = disc_id)
+    course = disc.course
+
+    if check_instructor(request):
+        instr = Instructor.objects.get(user=request.user)
+        if course.instructor!=instr:
+            return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    else:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+
+    if disc.is_pinned:
+        disc.is_pinned = False
+    else:
+        disc.is_pinned = True
+    
+    disc.save()
+
+    return HttpResponseRedirect(reverse('Comms:view_discussion',args=[course.id]))
+
+
+
+@login_required
+def delete_discussion(request,disc_id):
+    """Instructor can delete an announcement"""
+
+    
+    if 'registration_incomplete' in request.session:
+        return HttpResponseRedirect(reverse('Users:index'))
+
+    disc = DiscussionForum.objects.get(id = disc_id)
+    course = disc.course
+
+    if request.session['role'] == 'instructor':
+        instr = Instructor.objects.get(user=request.user)
+        if course.instructor != instr:
+            return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+    
+    else:
+        return render(request, 'Users/error.html',{'error':"You are not authorised to access this page"})
+
+    
+    disc.delete()
+
+    return HttpResponseRedirect(reverse('Comms:view_discussion',args=[course.id]))
+

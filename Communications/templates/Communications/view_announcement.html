@@ -1,5 +1,5 @@
 {% extends "Users/base.html" %}
-
+{% load markdown_support %}
 {% block head %}
     <title>Grade</title>
 {% endblock head %}
@@ -23,7 +23,7 @@
         Last edited on: {{anc.last_edit}}
     </p>
     <p>
-        {{anc.text}}
+        {{anc.text|convert_markdown|safe}}
     </p>
    
     
