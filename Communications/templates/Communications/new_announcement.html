@@ -1,0 +1,18 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>New announcement</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        New announcement for {{course.subject}}{{course.course_code}}
+    </h1>
+
+    <form method="post" action="{% url 'Comms:new_announcement' course.id %}" >
+        {% csrf_token %}
+        {{form.as_p}}
+
+        <button name="submit">Create</button>
+    </form>
+{% endblock body %}

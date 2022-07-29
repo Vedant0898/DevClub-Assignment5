@@ -15,7 +15,7 @@ class DiscussionForum(models.Model):
     is_pinned = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['is_pinned','-time_posted']
+        ordering = ['-is_pinned','-time_posted']
 
     def __str__(self):
         return f'{self.text[:30]}... ({self.sender}) @ {self.course}'
@@ -33,7 +33,7 @@ class Announcement(models.Model):
     is_pinned = models.BooleanField(default=False)
 
     class Meta:
-        ordering = ['is_pinned','-time_posted']
+        ordering = ['-is_pinned','-time_posted']
 
     def __str__(self):
         return f'{self.text[:30]}... ({self.instructor}) @ {self.course}'

@@ -1,0 +1,31 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Announcements</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        Announcements for {{course.subject}}{{course.course_code}}
+    </h1>
+    
+    <ul>
+    {% for a in anc %}
+        <li>
+            {% if a.is_pinned %}
+                <b>PINNED</b>
+            {% endif %}
+            <b><a href="{% url 'Comms:view_announcement' a.id %}"> {{a.title}} </a></b>
+            <p>Last edited on: {{a.last_edit}} </p>
+        </li>
+    {% empty %}
+        <li> No announcements have been made for this course.</li>
+    {% endfor %}
+
+    {% if is_instructor %}
+        <li>
+            <a href="{% url 'Comms:new_announcement' course.id %}">New announcement</a>
+        </li>
+    {% endif %}
+    </ul>
+{% endblock body %}

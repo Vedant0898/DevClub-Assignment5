@@ -17,6 +17,8 @@
         <a href="{% url 'Grades:view_course_grade_student' course.id %}">View Grades</a>
         <br>
         <a href="{% url 'Docs:all_docs' course.id %}">View Course Material</a>
+        <br>
+        <a href="{% url 'Comms:view_all_announcements' course.id %}">Announcements</a>    
     {% endif %}
     
     {% if is_instructor %}
@@ -29,6 +31,8 @@
         <a href="{% url 'Grades:view_total_grade_instr' course.id %}">View Total Grades</a>
         <br>
         <a href="{% url 'Users:edit_course' course.id %}">Edit course</a>
+        <br>
+        <a href="{% url 'Comms:view_all_announcements' course.id %}">Announcements</a>        
     {% endif %}
     
     {% if can_register %}

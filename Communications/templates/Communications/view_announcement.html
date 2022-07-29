@@ -1,0 +1,46 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Grade</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        {{anc.title}} ({{course.subject}}{{course.course_code}})
+    </h1>
+    {% if is_instructor %}
+        <a href="{% url 'Comms:edit_announcement' anc.id %}">Edit announcement</a>
+    {% endif %}
+    
+    {% if anc.is_pinned %}
+        <br>
+        <b>PINNED</b>
+        <br>
+    {% endif %}
+    <p>
+        Posted on: {{anc.time_posted}}
+        <br>
+        Last edited on: {{anc.last_edit}}
+    </p>
+    <p>
+        {{anc.text}}
+    </p>
+   
+    
+    {% if is_instructor %}
+        <p>
+            <a href="{% url 'Comms:delete_announcement' anc.id %}" class="confirmation">Delete announcement</a>
+            
+            <!-- js confirm box  -->
+            <script type="text/javascript">
+                var elems = document.getElementsByClassName('confirmation');
+                var confirmIt = function (e) {
+                    if (!confirm('Are you sure?')) e.preventDefault();
+                };
+                for (var i = 0, l = elems.length; i < l; i++) {
+                    elems[i].addEventListener('click', confirmIt, false);
+                }
+            </script>
+        </p>
+    {% endif %}
+{% endblock body %}
