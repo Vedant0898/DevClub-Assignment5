@@ -15,10 +15,14 @@
         <a href="{% url 'Grades:all_assignments' course.id %}">View Assignments</a>
         <br>
         <a href="{% url 'Grades:view_course_grade_student' course.id %}">View Grades</a>
+        <br>
+        <a href="{% url 'Docs:all_docs' course.id %}">View Course Material</a>
     {% endif %}
     
     {% if is_instructor %}
         <a href="{% url 'Grades:all_assignments' course.id %}">View Assignments</a>
+        <br>
+        <a href="{% url 'Docs:all_docs' course.id %}">View Course Material</a>
         <br>
         <a href="{% url 'Grades:calculate_total_grade' course.id %}">Calculate Total Grades</a>
         <br>

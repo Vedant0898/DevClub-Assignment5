@@ -1,0 +1,18 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Edit course material</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        Edit course material for {{course.subject}}{{course.course_code}}
+    </h1>
+
+    <form method="post" action="{% url 'Docs:edit_doc' doc.id %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{form.as_p}}
+
+        <button name="submit">Save</button>
+    </form>
+{% endblock body %}

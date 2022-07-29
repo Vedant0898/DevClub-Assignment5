@@ -1,0 +1,49 @@
+{% extends "Users/base.html" %}
+
+{% block head %}
+    <title>Documents</title>
+{% endblock head %}
+
+{% block body %}
+    <h1>
+        Uploaded course material for {{course.subject}}{{course.course_code}}
+    </h1>
+    
+    <ul>
+    {% for doc in docs %}
+        <li>
+            <a href="{{ doc.doc.url }}"> {{doc.display_name}} </a>
+             ({{doc.upload_date}})
+            {% if doc.notes %}
+                <p><b>Notes: </b>{{doc.notes|linebreaks}}</p>
+            {% endif %}
+            {% if is_instructor %}
+                <a href="{% url 'Docs:edit_doc' doc.id %}">Edit doc link</a>
+                <p>
+                    <a href="{% url 'Docs:delete_doc' doc.id %}" class="confirmation">Delete doc</a>
+                </p>
+            {% endif %}
+        </li>
+    {% empty %}
+        <li> No course material has been added yet</li>
+    {% endfor %}
+
+    {% if is_instructor %}
+        <p>
+            <a href="{% url 'Docs:add_doc' course.id %}">Add course material</a>
+        </p>
+    {% endif %}
+    
+    </ul>
+
+    <!-- js confirm box  -->
+    <script type="text/javascript">
+        var elems = document.getElementsByClassName('confirmation');
+        var confirmIt = function (e) {
+            if (!confirm('Are you sure?')) e.preventDefault();
+        };
+        for (var i = 0, l = elems.length; i < l; i++) {
+            elems[i].addEventListener('click', confirmIt, false);
+        }
+    </script>
+{% endblock body %}
