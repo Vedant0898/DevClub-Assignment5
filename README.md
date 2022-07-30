@@ -1,5 +1,58 @@
 # DevClub Assignment 5
 
+# Instructions to run this project
+
+## Users
+Users are of 3 types
+- Instructor
+- Student
+- Admin
+<br><br>
+
+### Instructor Home Page
+![](Images/1.png)
+
+### The home page for student
+![](Images/13.png)
+
+### Home page for admin (Default Django admin site)
+![](Images/14.png)
+
+<br>
+
+### Profile page
+![](Images/3.png)
+<br>
+
+### My courses
+![](Images/5.png)
+Note: Create new course is only visible for Instructor
+
+### Course page 
+- Instructor View ![](Images/7.png)
+- Student View ![](Images/15.png)
+
+### Participants page
+![](Images/10.png)
+
+### Course material
+![](Images/11.png)
+
+### Total Grade (instructor view)
+![](Images/12.png)
+
+### Total Grade of all courses (student view)
+![](Images/16.png)
+
+### Gradesheet of one course (student view)
+![](Images/17.png)
+
+### Light Theme
+![](Images/2.png)
+
+Unfortunately the project couldn't be uploaded on Heroku 
+
+---
 You have learnt about backend engineering with Django in our session. Now use it to create a web application by yourself!
 ## DevClub LMS (Learning Management System)
 You must have used **Moodle** in your courses, where both instructors and students login, and for each course, the instructor uses the platform to share resources, send announcements, release grades, conduct quizzes and what not!
