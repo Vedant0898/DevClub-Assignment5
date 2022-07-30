@@ -2,11 +2,9 @@ demo/django-env
 lms_env/
 .vscode/
 .DS_Store
-media/
 Users/static/Users/asset/*
 .gitsecret/keys/random_seed
 !*.secret
 
 *.pyc
 __pycache__
-db.sqlite3
