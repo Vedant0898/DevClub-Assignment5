@@ -5,14 +5,18 @@
 {% endblock head %}
 
 {% block body %}
-    <h1>
-        Resubmit {{a.assignment_name}} of {{a.course.subject}}{{a.course.course_code}}
-    </h1>
 
+<div class="card">
+    <div class="card-header">
+        <h1>
+            Resubmit {{a.assignment_name}} of {{a.course.subject}}{{a.course.course_code}}
+        </h1>
+    </div>
+</div>
     <form method="post" action="{% url 'Grades:resubmit_assignment' a.id %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{form.as_p}}
 
-        <button name="submit">Submit</button>
+        <button name="submit" class="btn btn-primary mt-4">Submit</button>
     </form>
 {% endblock body %}

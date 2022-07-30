@@ -5,13 +5,36 @@
 {% endblock head %}
 
 {% block body %}
-    <h1>{{person.first_name}} {{person.last_name}}</h1>
-    <h3>{{person.email}} ({{person.user.username}}) </h3>
-    
-    <p>About section:</p>
-    <p>{{person.about | linebreaks}}</p>
+<div class="card">
+    <!-- <div class="card-header">
+    </div> -->
+    <h1 class="card-header">{{person.first_name}} {{person.last_name}}</h1>
+    <div class="card-body">
+
+        <h4 class="card-text">{{person.email}} ({{person.user.username}}) </h4>
+    </div>
+</div>
+<div class="card text-white bg-dark mb-3">
+    <div class="card-body">
+        <h1 class="card-title"><b>About section</b></h1>
+        <p class="card-text">{{person.about | linebreaks}}</p>
+    </div>
+</div>
+<!--         
+    <div>About section:</div>
+    <div>
+    {{person.about | linebreaks}}
+</div> -->
     {% if is_owner %}
-        <a href="{% url 'Users:edit_profile' %}">Edit Profile</a>
+
+    <!-- <div class="card">
+        <div class="card-header"> -->
+            <a href="{% url 'Users:edit_profile' %}" class="btn btn-primary">Edit Profile</a>
+        <!-- </div>
+    </div> -->
+
+    {% else %}
+        <a href="" class="btn btn-primary">Message</a>
     {% endif %}
 
-{% endblock body %}
+    {% endblock body %}

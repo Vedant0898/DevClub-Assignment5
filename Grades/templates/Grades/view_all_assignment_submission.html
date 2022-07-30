@@ -5,10 +5,19 @@
 {% endblock head %}
 
 {% block body %}
-    <h1>
-        Viewing submissions of {{a.assignment_name}} of {{a.course.subject}}{{a.course.course_code}}
-    </h1>
+
+
+<div class="card">
+    <div class="card-header">
+        <h1>
+            Viewing submissions of {{a.assignment_name}} of {{a.course.subject}}{{a.course.course_code}}
+        </h1>
+    </div>
+</div>
     {% if stats %}
+
+<div class="card">
+    <div class="card-header">
         <h4>
             Stats:
             <p>Mean: {{stats.mean}} </p>
@@ -16,36 +25,82 @@
             <p>Max: {{stats.max}} </p>
             <p>Median: {{stats.median}} </p>
         </h4>
+    </div>
+</div>
     {% endif %}
-    <ul>
-        <li>Graded submissions</li>
-        {% for a_sub in a_subs %}
-            {% if a_sub.is_graded %}
-                <li>
-                    <a href="{% url 'Grades:grade_assignment' a_sub.id %}">
-                        {{a_sub.student}}
-                    </a>
-                    <b>Marks: {{a_sub.marks_obtained}}/{{a.maximum_marks}} </b>
-                </li>
-            {% endif %}
-        {% empty %}
-            <li>
-                No assignment submissions found
-            </li>
-        {% endfor %}
-    </ul>
+  <div>
+      <div class="card">
+          <div class="card-header">
+              <h2>
+                  Graded submissions
+              </h2>
+          </div>
+      </div>
+    {% for a_sub in a_subs %}
+    {% if a_sub.is_graded %}
+    <div class="row">
+        <div class="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="card overflow-hidden border-primary">
+                <h4 class="card-header fw-semibold text-light bg-primary">{{a_sub.student}}</h4>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center">
+                            <h3 class="mb-2 fw-semibold text-primary">
+                                <a href="{% url 'Grades:grade_assignment' a_sub.id %}">
+                                    {{a_sub.student}}
+                                </a>
+                                <b>Marks: {{a_sub.marks_obtained}}/{{a.maximum_marks}} </b>
+                            </h3>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% empty %}
+       <div class="card">
+          <div class="card-header">
+              <h2>
+                  No assignment submissions found
+              </h2>
+          </div>
+      </div>
+    {% endfor %}
+</div>
     <br>
-    <ul>
-        <li>Ungraded Submissions</li>
-        {% for a_sub in a_subs %}
-            {% if not a_sub.is_graded %}
-                <li>
-                    <a href="{% url 'Grades:grade_assignment' a_sub.id %}">
-                        {{a_sub.student}}
-                    </a>
-                </li>
-            {% endif %}
-        
-        {% endfor %}
-    </ul>
+ <div>
+    <div class="card">
+        <div class="card-header">
+            <h2>
+                Ungraded Submissions
+            </h2>
+        </div>
+    </div>
+    {% for a_sub in a_subs %}
+    {% if not a_sub.is_graded %}
+     <div class="row">
+         <div class="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+             <div class="card overflow-hidden border-primary">
+                 <h4 class="card-header fw-semibold text-light bg-primary">{{a_sub.student}}</h4>
+                 <div class="card-body">
+                     <div class="d-flex justify-content-center">
+                         <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center">
+                             <h3 class="mb-2 fw-semibold text-primary">
+                                 <a href="{% url 'Grades:grade_assignment' a_sub.id %}">
+                                     {{a_sub.student}}
+                                 </a>
+                             </h3>
+
+                         </div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+    {% endif %}
+
+    {% endfor %}
+</div>
 {% endblock body %}

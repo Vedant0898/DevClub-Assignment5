@@ -3,10 +3,13 @@
         <title>Error</title>
     </head>
     <body>
-        <p>{{error}}</p>
-        <p>
-            <a href="{% url 'Users:index' %}">Return to home page</a>
-        </p>
-        
+        <div class="card">
+            <div class="card-header">
+                <p>{{error}}</p>
+                <p>
+                    <a href="{% url 'Users:index' %}">Return to home page</a>
+                </p>
+            </div>
+        </div>
     </body>
 </html>

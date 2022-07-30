@@ -1,46 +1,274 @@
-<html>
-    <head>
-        {% block head %}
-        {% endblock head %}
-    </head>
-    <body>
-        <p>
-            <a href="{% url 'Users:index' %}">Home</a>
-        </p>
-        <p>
-        {% if user.is_authenticated %}
-            Hello, {{ user.username}}
-            {% if 'role' in request.session %}
-                ({{request.session.role}})
-            {% endif %}
-            <br>
-            {% if 'registration_incomplete' in request.session %}
-                <a href="{% url 'Users:register_user' %}">Complete your registration</a>
-            {% endif %}
-            <br>
-            <a href="{% url 'Users:view_profile' user.username %}">View Profile</a>
-            <br>
-            <a href="{% url 'Users:logout' %}">Logout</a>
-            <br>
-            <a href="{% url 'Users:my_courses' %}">View my courses</a>
-            
-            {% if request.session.role == 'student' %}
-                <br>
-                <a href="{% url 'Grades:view_all_grades_student' %}">View All Grades</a>
-            {% endif %}
-            <br>
-            <a href="{% url 'Comms:view_dm' %}">View DMs</a>
-        {% else %}
-            <a href="{% url 'Users:login' %}">Login</a>
-            <br>
-            <a href="{% url 'Users:register_user' %}">Register</a>
-        {% endif %}
-        </p>
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% block head %}
+    {% endblock head %}
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="author" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="shortcut icon" type="image/x-icon" href="asset/images/favicon.ico" /> -->
 
-        <p>
-            <a href="{% url 'Users:courses' %}">View all courses</a>
-        </p>
-        {% block body %}
-        {% endblock body %}
-    </body>
+    <link href="{% static 'Users/asset/plugins/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet" id="style">
+    <link href="{% static 'Users/asset/css/style.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/asset/css/dark-style.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/asset/css/transparent-style.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/asset/css/skin-modes.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/asset/css/icons.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/asset/css/custome.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/asset/colors/color1.css' %}" id="theme" rel="stylesheet" type="text/css" media="all">
+    <link href="{% static 'Users/asset/switcher/css/switcher.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/asset/switcher/demo.css' %}" rel="stylesheet">
+    <link href="{% static 'Users/asset/css/custome.css' %}" rel="stylesheet">
+    <style type="text/css">
+        @-webkit-keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes chartjs-render-animation {
+            from {
+                opacity: 0.99;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .chartjs-render-monitor {
+            -webkit-animation: chartjs-render-animation 0.001s;
+            animation: chartjs-render-animation 0.001s;
+        }
+    </style>
+
+
+    <script src="{% static 'Users/asset/js/jquery.min.js' %}"></script>
+
+</head>
+<body class="app sidebar-mini ltr light-mode">
+    <div class="page">
+        <div class="page-main">
+    
+            <div class="app-header header sticky">
+                <div class="container-fluid main-container">
+                    <div class="d-flex">
+                        <a aria-label="Hide Sidebar" class="app-sidebar__toggle" data-bs-toggle="sidebar" href="javascript:void(0)"></a>
+                        <!-- sidebar-toggle-->
+                        <a class="logo-horizontal " href="/">
+                            <!--<img src="asset/images/logo-letter.png" class="header-brand-img desktop-logo" alt="logo">-->
+                            <!--<img src="asset/images/logo-dark-text.png" class="header-brand-img light-logo1" alt="logo">-->
+                            <img src="{% static 'Users/asset/images/01.png' %}" class="header-brand-img light-logo1" alt="logo">
+                        </a>
+                        <!-- LOGO -->
+
+                        <div class="d-flex order-lg-2 ms-auto header-right-icons">
+                            <div class="dropdown d-none">
+
+                            </div>
+                            <!-- SEARCH -->
+                            <button class="navbar-toggler navresponsive-toggler d-lg-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent-4" aria-controls="navbarSupportedContent-4" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon fe fe-more-vertical"></span></button>
+                            <div class="navbar navbar-collapse responsive-navbar p-0">
+                                <div class="collapse navbar-collapse" id="navbarSupportedContent-4">
+                                    <div class="d-flex order-sm-2">
+                                        <div class="d-flex country"><a class="nav-link icon theme-layout nav-link-bg layout-setting"><span class="light-layout"><i class="fe fe-sun"></i></span><span class="dark-layout"><i class="fe fe-moon"></i></span></a></div>
+
+                                        <div class="dropdown d-flex profile-1">
+                                            <a href="javascript:void(0)" data-bs-toggle="dropdown" class="nav-link icon full-screen-link nav-link-bg"><i class="fe fe-settings fa-spin"></i></a>
+                                            <!--<a href="javascript:void(0)" data-bs-toggle="dropdown" class="nav-link leading-none d-flex"> <img src="asset/images/users/21.jpg" alt="profile-user" class="avatar  profile-user brround cover-image"> </a>-->
+                                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                                <div class="drop-heading">
+                                                    <div class="text-center">
+
+                                                            {% if user.is_authenticated %}
+                                                            Hello, {{ user.username}}
+                                                            {% if 'role' in request.session %}
+                                                            <span id="h1_lblusername" class="d-block text-dark mb-0 fs-14 fw-semibold">
+                                                                ({{request.session.role|title}})
+                                                            </span>
+                                                          
+                                                            {% endif %}
+                                                            <br>
+                                                            {% if 'registration_incomplete' in request.session %}
+                                                            <!--<a href="{% url 'Users:register_user' %}">Complete your registration</a>-->
+                                                             <a class="dropdown-item" href="{% url 'Users:register_user' %}"><i class="dropdown-icon fe fe-mail"></i>Complete your registration</a>
+                                                            {% endif %}
+                                                            <br>
+                                                            <!--<a href="{% url 'Users:view_profile' user.username %}">View Profile</a>-->
+                                                        <a class="dropdown-item" href="{% url 'Users:view_profile' user.username %}"><i class="dropdown-icon fe fe-mail"></i>View Profile </a>
+                                                            <br>
+                                                            <!--<a href="{% url 'Users:logout' %}">Logout</a>-->
+                                                        <a class="dropdown-item" href="{% url 'Users:logout' %}"><i class="dropdown-icon fe fe-alert-circle"></i>Logout </a>
+                                                            <br>
+                                                          
+                                                        {% else %}
+                                                       
+                                                        <a class="dropdown-item" href="{% url 'Users:login' %}"><i class="dropdown-icon fe fe-alert-circle"></i>Login </a>
+                                                        <br>
+                                                        
+                                                        <a class="dropdown-item" href="{% url 'Users:register_user' %}"><i class="dropdown-icon fe fe-alert-circle"></i>Register </a>
+                                                           {% endif %}
+                                                      
+                                                    </div>
+                                                </div>
+                                                <!-- <div class="dropdown-divider m-0"></div> -->
+
+
+                                            </div>
+                                        </div>
+                                        <div class="dropdown d-flex"><a href="{% url 'Users:logout' %}" class="nav-link icon full-screen-link nav-link-bg"><i class="fa fa-power-off text-danger"></i></a></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sticky is-expanded">
+                <div class="app-sidebar__overlay active" data-bs-toggle="sidebar"></div>
+                <div class="app-sidebar ps ps--active-y open">
+                    <div class="side-header">
+                        <a class="header-brand1" href="/">
+                            <!--<img src="asset/images/logo-letter-light.png" class="header-brand-img toggle-logo" alt="logo">
+                            <img src="asset/images/logo-light-text.png" class="header-brand-img desktop-logo" alt="logo">-->
+                            <!--<img src="asset/images/logo-letter.png" class="header-brand-img light-logo" alt="logo">
+                            <img src="asset/images/logo-dark-text.png" class="header-brand-img light-logo1" alt="logo">-->
+                            <img src="{% static 'Users/asset/images/01.png' %}" class="header-brand-img light-logo1" alt="logo">
+                        </a>
+                    </div>
+                    <div class="main-sidemenu is-expanded">
+                        <ul class="side-menu open">
+
+
+                            <li id="s1_liDash" class="slide is-expanded"><a class="side-menu__item has-link active" data-bs-toggle="slide" href="/"><i class="side-menu__icon fe fe-home"></i><span class="side-menu__label">HOME</span></a> </li>
+                            {% if user.is_authenticated %}
+
+                            <!-- Courses sub tab -->
+                            <li id="s1_liTabUsers" class="sub-category">
+                                <h3>COURSES</h3>
+                            </li>
+                            <li id="s1_liUsers" class="slide is-expanded">
+                                <!-- <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-user"></i><span class="side-menu__label">COURSES</span><i class="angle fe fe-chevron-right"></i></a> -->
+                                <ul class="slide-menu open">
+                                    <li><a href="{% url 'Users:my_courses' %}" class="slide-item">View my courses</a></li>
+                                    <li><a href="{% url 'Users:courses' %}" class="slide-item">View all courses</a></li>
+                                    
+                                </ul>
+                            </li>
+
+                            <!-- Grades sub tab  -->
+                            <li id="s1_liTabGrades" class="sub-category">
+                                <h3>GRADES</h3>
+                            </li>
+                            <li id="s1_liGrades" class="slide is-expanded">
+                                <ul class="slide-menu open">
+                                    {% if request.session.role == 'student' %}
+                                        <li>
+                                            <a href="{% url 'Grades:view_all_grades_student' %}" class="slide-item">View All Grades</a>
+                                        </li>
+                                    {% endif %}
+                                </ul>
+                            </li>
+
+                            <!-- Messages sub tab  -->
+                            <li id="s1_liTabComms" class="sub-category">
+                                <h3>MESSAGES</h3>
+                            </li>
+                            <li id="s1_liComms" class="slide is-expanded">
+                                <ul class="slide-menu open">
+                                    <li>
+                                        <a href="{% url 'Comms:view_dm' %}" class="slide-item">View DMs</a>
+                                    </li>
+                                </ul>
+                            </li>
+                                
+
+
+                                
+                            {% else %}
+                            <li id="s1_liUsers" class="slide">
+                                <!-- <a class="side-menu__item" data-bs-toggle="slide" href="javascript:void(0)"><i class="side-menu__icon fe fe-user"></i><span class="side-menu__label">COURSES</span><i class="angle fe fe-chevron-right"></i></a> -->
+                                <ul class="slide-menu">
+                                    <li><a href="{% url 'Users:courses' %}" class="slide-item">View all courses</a></li>
+                                </ul>
+                            </li>
+                           
+                            {% endif %}
+
+                      
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="main-content app-content mt-0">
+                <div class="side-app">
+                    <div class="main-container container-fluid">
+                        <div class="page-header">
+                            <!-- <div id="divdshboard">
+                                <ol class="breadcrumb">
+                                   
+                                    <li class="breadcrumb-item">
+                                        <a href="{% url 'Users:index' %}">Home</a>
+                                    </li>
+
+                                       
+                                   </ol>
+                            </div> -->
+                            
+
+                        </div>
+                        {% block body %}
+                        {% endblock body %}
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+
+
+        <footer class="footer">
+            <div class="container">
+                <div class="row align-items-center flex-row-reverse">
+                    <div class="col-md-12 col-sm-12 text-center">
+                        Designed by <a href="mailto:mt1210898@iitd.ac.in">Vedant Tamhane</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <a href="#top" id="back-to-top"><i class="fa fa-angle-up"></i></a>
+
+
+    <script src="{% static 'Users/asset/plugins/bootstrap/js/popper.min.js' %}"></script>
+    <script src="{% static 'Users/asset/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'Users/asset/iconfonts/fontawesome-free-6.1.1/js/all.min.js' %}"></script>
+    <script src="{% static 'Users/asset/js/sticky.js' %}"></script>
+    <script src="{% static 'Users/asset/plugins/sidebar/sidebar.js' %}"></script>
+    <script src="{% static 'Users/asset/plugins/p-scroll/perfect-scrollbar.js' %}"></script>
+
+    <script src="{% static 'Users/asset/plugins/sidemenu/sidemenu.js' %}"></script>
+    <script src="{% static 'Users/asset/js/index1.js' %}"></script>
+
+    <script src="{% static 'Users/asset/js/themeColors.js' %}"></script>
+    <script src="{% static 'Users/asset/js/custom.js' %}"></script>
+    <!-- <script src="{% static 'Users/asset/switcher/js/switcher.js' %}"></script> -->
+
+
+</body>
 </html>

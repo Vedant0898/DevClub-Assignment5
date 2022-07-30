@@ -5,14 +5,19 @@
 {% endblock head %}
 
 {% block body %}
-    <h1>
-        New assignment of {{course.subject}}{{course.course_code}}
-    </h1>
+    
+<div class="card">
+    <div class="card-header">
+        <h1>
+            New assignment of {{course.subject}}{{course.course_code}}
+        </h1>
+    </div>
+</div>
 
     <form method="post" action="{% url 'Grades:create_assignment' course.id %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{form.as_p}}
 
-        <button name="submit">Create</button>
+        <button name="submit" class="btn btn-primary mt-4">Create</button>
     </form>
 {% endblock body %}

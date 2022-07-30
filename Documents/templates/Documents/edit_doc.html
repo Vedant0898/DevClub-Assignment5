@@ -1,18 +1,28 @@
 {% extends "Users/base.html" %}
+{% load bootstrap3 %}
 
 {% block head %}
     <title>Edit course material</title>
 {% endblock head %}
 
 {% block body %}
-    <h1>
-        Edit course material for {{course.subject}}{{course.course_code}}
-    </h1>
+    
+<div class="card">
+    <div class="card-body">
+        <h1>
+            Edit course material for 
+            <a href="{% url 'Users:course' course.id %}"> 
+                {{course.subject}}{{course.course_code}}
+            </a>
+        </h1>
+    </div>
+</div>
 
     <form method="post" action="{% url 'Docs:edit_doc' doc.id %}" enctype="multipart/form-data">
         {% csrf_token %}
-        {{form.as_p}}
-
-        <button name="submit">Save</button>
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button name="submit" class="btn btn-primary mt-4">Save</button>
+        {% endbuttons %}
     </form>
 {% endblock body %}

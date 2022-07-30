@@ -1,20 +1,29 @@
 {% extends "Users/base.html" %}
+{% load bootstrap3 %}
 
 {% block head %}
     <title>Login</title>
 {% endblock head %}
 
 {% block body %}
-    <p>Login page for both</p>
-    <form method="post" action="{% url 'Users:login' %}">
+<div class="card">
+    <div class="card-header">
+        <h2 class="page-title">Login</h2>
+    </div>
+</div>
+    <form method="post" action="{% url 'Users:login' %}" class="form">
         {% csrf_token %}
-        {{ form.as_p }}
-       
-        <button name="submit">Login</button>
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button name="submit" class="btn btn-primary mt-4">Login</button>
+        {% endbuttons %}
         <input type="hidden" name="next" value="{% url 'Users:index' %}" />
     </form>
 
-    <p>
+
+<div class="card">
+    <div class="card-header">
         Don't have an account? <a href="{% url 'Users:register_user' %}">Register Now</a>
-    </p>
+    </div>
+</div>
 {% endblock body %}

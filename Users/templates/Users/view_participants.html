@@ -5,32 +5,33 @@
 {% endblock head %}
 
 {% block body %}
-    <p>
-        Participants of <a href="{% url 'Users:course' course.id %}"> {{course.subject}}{{course.course_code}} ({{course.year}}-{{course.sem}})</a>
-    </p>
-    <ul>
-        <li> List of verified participants</li>
+    <div class="card">
+        <div class="card-header">
+            <h1 class="page-title"> Participants of <a href="{% url 'Users:course' course.id %}"> {{course.subject}}{{course.course_code}} ({{course.year}}-{{course.sem}})</a></h1>
+        </div>
+    </div>
+    
+    
+   <div>
+    
         {% for p in pt %}
-            {% if p.verification_status %}
-                <li>
-                    <a href="{% url 'Users:view_profile' p.student.user.username %}"> {{p.student.first_name}} {{p.student.last_name}}</a>
-                </li>
-            {% endif %}
+        <div class="row">
+            <div class="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="card overflow-hidden border-primary">
+                    <h4 class="card-header fw-semibold text-light bg-dark">
+                            <a href="{% url 'Users:view_profile' p.student.user.username %}"> {{p.student.first_name}} {{p.student.last_name}}</a>
+                        </h4>
+                </div>
+            </div>
+        </div>
 
-        {% endfor %}
-
-    </ul>
-    <ul>
-        <li>List of unverified participants</li>
-        {% for p in pt %}
-            {% if not p.verification_status %}
-                <li>
-                    <a href="{% url 'Users:view_profile' p.student.user.username %}"> {{p.student.first_name}} {{p.student.last_name}}</a>
-                </li>
-            {% endif %}
-        
         {% empty %}
-            <li>No students in this course</li>
+        <div class="card">
+            <div class="card-header">
+                <h2 class="page-title">>No students in this course</h2>
+            </div>
+        </div>
         {% endfor %}
-    </ul>
+    </div>
+
 {% endblock body %}

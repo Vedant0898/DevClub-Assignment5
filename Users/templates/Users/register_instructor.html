@@ -1,19 +1,26 @@
 {% extends "Users/base.html" %}
+{% load bootstrap3 %}
 
 {% block head %}
     <title>Register</title>
 {% endblock head %}
 
 {% block body %}
-    <p>Registration Page-2 for instructors</p>
-    <form method="post" action="{% url 'Users:register_instructor' %}" >
+<div class="card">
+    <div class="card-header">
+        <h1 class="page-title">Register as Instructor</h1>
+    </div>
+</div>
+    <form method="post" action="{% url 'Users:register_instructor' %}" class="form">
         {% csrf_token %}
-        {{form.as_p}}
-
-        <button name="submit">Complete registration as instructor</button>
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button name="submit" class="btn btn-primary">Complete registration as instructor</button>
+        {% endbuttons %}
     </form>
-
-    <p>
-        <a href="{% url 'Users:register_student' %}">Click here</a> to register as student
-    </p>
+<div class="card">
+    <div class="card-header">
+        <a href="{% url 'Users:register_student' %}">Click here</a>&nbsp; to register as student
+    </div>
+</div>
 {% endblock body %}

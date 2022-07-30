@@ -1,14 +1,24 @@
 {% extends "Users/base.html" %}
+{% load bootstrap3 %}
 
 {% block head %}
     <title>Edit Profile</title>
 {% endblock head %}
 
 {% block body %}
-    <p>{{person.user.username}} </p>
+<div class="form-group">
+    <label class="control-label" for="id_username">Username</label>
+    <div class="card">
+        <div class="card-header">
+            {{person.user.username}}
+        </div>
+    </div>
+</div>
     <form method="post" action="{% url 'Users:edit_profile' %}">
         {% csrf_token %}
-        {{form.as_p}}
-        <button name="submit">Save changes</button>
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button name="submit" class="btn btn-primary mt-4">Save changes</button>
+        {% endbuttons %}
     </form>
 {% endblock body %}

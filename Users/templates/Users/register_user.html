@@ -1,22 +1,45 @@
 {% extends "Users/base.html" %}
+{% load bootstrap3 %}
 
 {% block head %}
     <title>Register</title>
 {% endblock head %}
 
 {% block body %}
-    <p>Registration Page-1</p>
+    <div class="card">
+        <div class="card-header">
+            <h1 class="page-title">Register</h1>
+        </div>
+    </div>
 
     {% if 'registration_incomplete' in request.session %}
-        <a href="{% url 'Users:register_student' %}">Complete registration as student</a>
-        <br>
-        <a href="{% url 'Users:register_instructor' %}">Complete registration as instructor</a>
+        
+        <div class="row">
+            <div class="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="card overflow-hidden border-primary">
+                    <h4 class="card-header fw-semibold text-light bg-dark">
+                        <a href="{% url 'Users:register_student' %}">Complete registration as student</a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="card overflow-hidden border-primary">
+                    <h4 class="card-header fw-semibold text-light bg-dark">
+                        <a href="{% url 'Users:register_instructor' %}">Complete registration as instructor</a>
+                    </h4>
+                </div>
+            </div>
+        </div>
+       
     {% else %}
-        <form method="post" action="{% url 'Users:register_user' %}" >
+        <form method="post" action="{% url 'Users:register_user' %}" class="form" >
             {% csrf_token %}
-            {{form.as_p}}
-
-            <button name="submit">Register</button>
+            {% bootstrap_form form %}
+            {% buttons %}
+                <button name="submit" class="btn btn-primary mt-4">Register</button>
+            {% endbuttons %}
         </form>
     {% endif %}
 {% endblock body %}

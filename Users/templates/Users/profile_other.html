@@ -5,12 +5,27 @@
 {% endblock head %}
 
 {% block body %}
-    <h2>{{person.username}} </h2>
+    
+<div class="card">
+    <div class="card-header">
+        <h2>{{person.username}} </h2>
+    </div>
+</div>
     {% if is_staff %}
+
+<div class="card">
+    <div class="card-header">
         <h3>Staff</h3>
+    </div>
+</div>
     {% endif %}
     {% if is_owner and not is_staff %}
+       
+<div class="card">
+    <div class="card-header">
         <a href="{% url 'Users:register_user' %}">Complete your registration</a>
+    </div>
+</div>
     {% endif %}
 
 {% endblock body %}

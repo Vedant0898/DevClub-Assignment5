@@ -5,25 +5,61 @@
 {% endblock head %}
 
 {% block body %}
-    <p>Details of all courses</p>
-    <ul>
+    <div class="card">
+        <div class="card-header">
+            <h1 class="page-title">My courses</h1>
+        </div>
+    </div>
+    
+    <div>
+
         {% for course in courses %}
-            <li>
-                <a href="{% url 'Users:course' course.id %}"> {{course.subject}}{{course.course_code}} ({{course.year}}-{{course.sem}})</a>
-            </li>
+        <div class="row">
+            <div class="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+                <div class="card overflow-hidden border-primary">
+                    <h4 class="card-header fw-semibold text-light bg-dark">
+                        <a href="{% url 'Users:course' course.id %}">{{course.subject}}{{course.course_code}} ({{course.year}}-{{course.sem}})</a>
+                    </h4>
+                    <div class="card-body">
+                        <div class="d-flex justify-content-center">
+                            <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center">
+                                <h3 class="mb-2 fw-semibold text-primary">
+                                    
+                                            <a href="{% url 'Users:course' course.id %}">{{course.course_description}} </a>
+
+                                    </h3>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         
         {% empty %}
             {% if is_instructor %}
-                <li>No course found</li>
+                <div class="card">
+                    <div class="card-header">
+                    <h2>No course found</h2>
+                    </div>
+                </div>
             {% else %}
-                <li>You have not registered for any course</li>
+                <div class="card">
+                    <div class="card-header">
+                        <h2>You have not registered for any course</h2>
+                    </div>
+                </div>
             {% endif %}
         {% endfor %}
 
         {% if is_instructor %}
-            <li>
-                <a href="{% url 'Users:create_new_course' %}"> Create New Course </a>
-            </li>
+            <div class="card">
+                <div class="card-header">
+                    <a href="{% url 'Users:create_new_course' %}" > Create New Course </a>
+                </div>
+            </div>
         {% endif %}
-    </ul>
+    </div>
+
+
 {% endblock body %}

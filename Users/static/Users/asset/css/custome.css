@@ -1,0 +1,153 @@
+.dt-buttons {
+    position: relative;
+    float: right !important;
+    margin-bottom: 15px;
+}
+.navbar {
+    position: relative;
+    min-height: inherit;
+    margin-bottom: inherit;
+    /*border: 1px solid transparent;*/
+}
+.CheckBoxList-inner {
+    background: #fff;
+    border: 1px solid #c9c9c9;
+    border-radius: 5px;
+    width: auto;
+    height: 280px;
+    overflow-y: auto;
+    z-index: 9999;
+}
+.checkbox-dropdown label {
+    margin-bottom:0px;
+}
+.checkbox-dropdown input[type=radio], .checkbox-dropdown input[type=checkbox] {
+    vertical-align: text-bottom;
+}
+.pagination {
+    padding-left: 0;
+    margin: 20px 0;
+    border-radius: 4px
+}
+
+.pagination > li {
+    display: inline
+}
+
+.pagination > li > a, .pagination > li > span {
+    position: relative;
+    float: left;
+    padding: 6px 12px;
+    line-height: 1.42857;
+    text-decoration: none;
+    color: #337ab7;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    margin-left: -1px
+}
+
+.pagination > li:first-child > a, .pagination > li:first-child > span {
+    margin-left: 0;
+    border-bottom-left-radius: 4px;
+    border-top-left-radius: 4px
+}
+
+.pagination > li:last-child > a, .pagination > li:last-child > span {
+    border-bottom-right-radius: 4px;
+    border-top-right-radius: 4px
+}
+
+.pagination > li > a:focus, .pagination > li > a:hover, .pagination > li > span:focus, .pagination > li > span:hover {
+    z-index: 2;
+    color: #23527c;
+    background-color: #eee;
+    border-color: #ddd
+}
+
+.pagination > .active > a, .pagination > .active > a:focus, .pagination > .active > a:hover, .pagination > .active > span, .pagination > .active > span:focus, .pagination > .active > span:hover {
+    z-index: 3;
+    color: #fff;
+    background-color: #337ab7;
+    border-color: #337ab7;
+    cursor: default
+}
+
+.pagination > .disabled > a, .pagination > .disabled > a:focus, .pagination > .disabled > a:hover, .pagination > .disabled > span, .pagination > .disabled > span:focus, .pagination > .disabled > span:hover {
+    color: #777;
+    background-color: #fff;
+    border-color: #ddd;
+    cursor: not-allowed
+}
+
+.pagination-lg > li > a, .pagination-lg > li > span {
+    padding: 10px 16px;
+    font-size: 18px;
+    line-height: 1.33333
+}
+
+.pagination-lg > li:first-child > a, .pagination-lg > li:first-child > span {
+    border-bottom-left-radius: 6px;
+    border-top-left-radius: 6px
+}
+
+.pagination-lg > li:last-child > a, .pagination-lg > li:last-child > span {
+    border-bottom-right-radius: 6px;
+    border-top-right-radius: 6px
+}
+
+.pagination-sm > li > a, .pagination-sm > li > span {
+    padding: 5px 10px;
+    font-size: 12px;
+    line-height: 1.5
+}
+
+.badge, .label {
+    font-weight: 700;
+    line-height: 1;
+    white-space: nowrap;
+    text-align: center
+}
+
+.pagination-sm > li:first-child > a, .pagination-sm > li:first-child > span {
+    border-bottom-left-radius: 3px;
+    border-top-left-radius: 3px
+}
+
+.pagination-sm > li:last-child > a, .pagination-sm > li:last-child > span {
+    border-bottom-right-radius: 3px;
+    border-top-right-radius: 3px
+}
+#dvEligibility {
+    background: rgb(96 125 139 / 18%);
+    border-radius: 10px;
+    padding: 10px 15px;
+    box-shadow: 0px 2px 13px #343a40;
+}
+#dvEligibility p {
+    margin-bottom: 10px;
+    font-weight: 400;
+    font-size: 16px;
+}
+#dvEligibility span {
+    font-weight: 600;
+    font-size: 18px;
+    float: right;
+    color: #2080b0;
+}
+/*.my_text {
+    background: rgb(96 125 139 / 18%);
+    border-radius: 10px;
+    padding: 10px 15px;
+    box-shadow: 0px 2px 13px #343a40;
+}
+.my_text p {
+    margin-bottom: 10px;
+    font-weight: 400;
+    font-size: 16px;
+}
+.my_text span {
+    font-weight: 600;
+    font-size: 18px;
+    float: right;
+    color: #2080b0;
+}*/

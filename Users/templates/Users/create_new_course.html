@@ -1,14 +1,22 @@
 {% extends "Users/base.html" %}
+{% load bootstrap3 %}
 
 {% block head %}
     <title>Register new course</title>
 {% endblock head %}
 
 {% block body %}
-    <p>Create new course</p>
-    <form method="post"  action="{% url 'Users:create_new_course' %}">
+    
+<div class="card">
+    <div class="card-body">
+        <h3>Create new course</h3>
+    </div>
+</div>
+    <form method="post"  action="{% url 'Users:create_new_course' %}" class="form">
         {% csrf_token %}
-        {{ form.as_p}}
-        <button name="submit">Create</button>
+        {% bootstrap_form form %}
+        {% buttons %}
+            <button name="submit" class="btn btn-primary mt-4">Create</button>
+        {% endbuttons %}
     </form>
 {% endblock body %}

@@ -5,61 +5,74 @@
 {% endblock head %}
 
 {% block body %}
-    <h1>
-        {{a.assignment_name}} of {{course.subject}}{{course.course_code}}
-    </h1>
-    {% if is_instructor %}
-        <a href="{% url 'Grades:edit_assignment' a.id %}">Edit assignment</a>
-    {% endif %}
-    <p>
-        <a href="{% url 'Grades:all_assignments' course.id %}">View all assignments</a>
-    </p>
-    <p>
-        Duration from {{a.start_date}} to {{a.due_date}}
-    </p>
-    <p> Maximum Marks: {{a.maximum_marks}}</p>
-    {% if a_sub %}
-        {% if a_sub.is_graded %}
+   
+<div class="card">
+    <div class="card-header">
+        <h1>
+            {{a.assignment_name}} of {{course.subject}}{{course.course_code}}
+        </h1>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h2>
+            {% if is_instructor %}
+            <a href="{% url 'Grades:edit_assignment' a.id %}">Edit assignment</a>
+            {% endif %}
+            <p>
+                <a href="{% url 'Grades:all_assignments' course.id %}">View all assignments</a>
+            </p>
+            <p>
+                Duration from {{a.start_date}} to {{a.due_date}}
+            </p>
+            <p> Maximum Marks: {{a.maximum_marks}}</p>
+            {% if a_sub %}
+            {% if a_sub.is_graded %}
             <p>Marks obtained: {{a_sub.marks_obtained}}</p>
             <b> (Assignment GRADED) </b>
-        {% endif %}
-    {% endif %}
+            {% endif %}
+            {% endif %}
 
 
-    <p>
-        {{a.info | linebreaks}}
-    </p>
-    {% if a.resources %}
-        <p>
-            <a href="{{ a.resources.url }}"> {{a.resource_display_name}} </a>
-        </p>
-    {% endif %}
-    {% if not is_instructor %}
-        {% if a_sub %}
+            <p>
+                {{a.info | linebreaks}}
+            </p>
+            {% if a.resources %}
+            <p>
+                <a href="{{ a.resources.url }}"> {{a.resource_display_name}} </a>
+            </p>
+            {% endif %}
+            {% if not is_instructor %}
+            {% if a_sub %}
             <a href="{{ a_sub.file.url }}"> View Submitted assignment</a>
             <br>
             <a href="{% url 'Grades:resubmit_assignment' a.id %}"> Resubmit assignment</a>
-        {% else %}
+            {% else %}
             <a href="{% url 'Grades:submit_assignment' a.id %}"> Submit assignment</a>
-        {% endif %}
-    
-    {% else %}
-        <p>
-            <a href="{% url 'Grades:view_all_assignment_submission' a.id %}">View Submissions</a>
-        </p>
-        <p>
-            <a href="{% url 'Grades:delete_assignment' a.id %}" class="confirmation">Delete assignment</a>
-            
-            <!-- js confirm box  -->
-            <script type="text/javascript">
-                var elems = document.getElementsByClassName('confirmation');
-                var confirmIt = function (e) {
-                    if (!confirm('Are you sure?')) e.preventDefault();
-                };
-                for (var i = 0, l = elems.length; i < l; i++) {
-                    elems[i].addEventListener('click', confirmIt, false);
-                }
-            </script>
-        </p>
+            {% endif %}
+
+            {% else %}
+            <p>
+                <a href="{% url 'Grades:view_all_assignment_submission' a.id %}">View Submissions</a>
+            </p>
+            <p>
+                <a href="{% url 'Grades:delete_assignment' a.id %}" class="confirmation">Delete assignment</a>
+
+            </p>
+        </h2>
+    </div>
+</div>
+    <!-- js confirm box  -->
+<script type="text/javascript">
+    var elems = document.getElementsByClassName('confirmation');
+    var confirmIt = function (e) {
+        if (!confirm('Are you sure?')) e.preventDefault();
+    };
+    for (var i = 0, l = elems.length; i < l; i++) {
+        elems[i].addEventListener('click', confirmIt, false);
+    }
+</script>
+
     {% endif %}
 {% endblock body %}

@@ -5,41 +5,81 @@
 {% endblock head %}
 
 {% block body %}
-    <h1>{{course.subject}}{{course.course_code}}</h1>
-    <p>{{course.course_description}} </p>
-    <p>
-        <a href="{% url 'Users:view_participants' course.id %}">View Participants</a>
-    </p>
     
+    <div class="card">
+        
+            <h1 class="card-header fw-semibold text-light bg-dark">
+                <a href="{% url 'Users:course' course.id %}">{{course.subject}}{{course.course_code}} ({{course.year}}-{{course.sem}}) </a>
+            </h1>
+        
+        <div class="card-body">
+            <h4>{{course.course_description}} </h4>
+            <p>Course Instructor :<a href="{% url 'Users:view_profile' course.instructor.user.username %}"> {{course.instructor}} </a></p>
+
+        </div>
+    </div>
+  
+    <div class="card">
+    
+        <h4 class="card-header">
+            <a href="{% url 'Users:view_participants' course.id %}">View Participants</a>
+        </h4>
+    
+    </div>
+
     {% if registered %}
+<div class="card">
+    <h4 class="card-header">
         <a href="{% url 'Grades:all_assignments' course.id %}">View Assignments</a>
-        <br>
+    </h4>
+</div>
+<div class="card">
+    <h4 class="card-header">
         <a href="{% url 'Grades:view_course_grade_student' course.id %}">View Grades</a>
-        <br>
+    </h4>
+</div>
+<div class="card">
+    <h4 class="card-header">
         <a href="{% url 'Docs:all_docs' course.id %}">View Course Material</a>
-        <br>
-        <a href="{% url 'Comms:view_all_announcements' course.id %}">Announcements</a>
-        <br>
-        <a href="{% url 'Comms:view_discussion' course.id %}">Discussion Forum</a>    
+    </h4>
+</div>
     {% endif %}
     
     {% if is_instructor %}
+<div class="card">
+    <h4 class="card-header">
         <a href="{% url 'Grades:all_assignments' course.id %}">View Assignments</a>
-        <br>
+    </h4>
+</div>
+<div class="card">
+    <h4 class="card-header">
         <a href="{% url 'Docs:all_docs' course.id %}">View Course Material</a>
-        <br>
+    </h4>
+</div>
+<div class="card">
+    <h4 class="card-header">
         <a href="{% url 'Grades:calculate_total_grade' course.id %}">Calculate Total Grades</a>
-        <br>
+    </h4>
+</div>
+<div class="card">
+    <h4 class="card-header">
         <a href="{% url 'Grades:view_total_grade_instr' course.id %}">View Total Grades</a>
-        <br>
+    </h4>
+</div>
+<div class="card">
+    <h4 class="card-header">
         <a href="{% url 'Users:edit_course' course.id %}">Edit course</a>
-        <br>
-        <a href="{% url 'Comms:view_all_announcements' course.id %}">Announcements</a> 
-        <br>
-        <a href="{% url 'Comms:view_discussion' course.id %}">Discussion Forum</a>           
+    </h4>
+</div>
+       
     {% endif %}
     
     {% if can_register %}
+<div class="card">
+    <h4 class="card-header">
         <a href="{% url 'Users:register_for_course' course.id %}">Register for this course</a>
+    </h4>
+</div>
+        
     {% endif %}
 {% endblock body %}

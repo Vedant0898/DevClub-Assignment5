@@ -6,30 +6,40 @@
 {% endblock head %}
 
 {% block body %}
-    <h1>
-        Grading {{a.assignment_name}} of {{a.course.subject}}{{a.course.course_code}}
-    </h1>
+ 
+<div class="card">
+    <div class="card-header">
+        <h1>
+            Grading {{a.assignment_name}} of {{a.course.subject}}{{a.course.course_code}}
+        </h1>
+    </div>
+</div>
 
-    <p>
-        <a href="{% url 'Grades:view_assignment' a.id %}">View assignment</a>
-    </p>
-    <p>
-        <a href="{{ a_sub.file.url }}">View submission</a>
-    </p>
-    <p>
-        Submission time : {{a_sub.submission_time}}
-        {% if a_sub.submission_time|utc > a.due_date|utc %}
+<div class="card">
+    <div class="card-header">
+        <p>
+            <a href="{% url 'Grades:view_assignment' a.id %}">View assignment</a>
+        </p>
+        <p>
+            <a href="{{ a_sub.file.url }}">View submission</a>
+        </p>
+        <p>
+            Submission time : {{a_sub.submission_time}}
+            {% if a_sub.submission_time|utc > a.due_date|utc %}
             <b>(LATE SUBMISSION)</b>
-        {% endif %}
-    </p>
-    <p>
-        Maximum marks: {{a.maximum_marks}}
-    </p>
+            {% endif %}
+        </p>
+        <p>
+            Maximum marks: {{a.maximum_marks}}
+        </p>
+    </div>
+</div>
+   
 
     <form method="post" action="{% url 'Grades:grade_assignment' a_sub.id %}" enctype="multipart/form-data">
         {% csrf_token %}
         {{form.as_p}}
 
-        <button name="submit">Grade</button>
+        <button name="submit" class="btn btn-primary mt-4">Grade</button>
     </form>
 {% endblock body %}

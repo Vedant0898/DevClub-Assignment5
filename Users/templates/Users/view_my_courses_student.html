@@ -5,39 +5,45 @@
 {% endblock head %}
 
 {% block body %}
-    <p>Details of all courses</p>
-    <ul>
-        <li>Details of verified courses</li>
-        {% for p in pt %}
-            {% if p.verification_status %}
-                <li>
-                    <a href="{% url 'Users:course' p.course.id %}"> {{p.course.subject}}{{p.course.course_code}} ({{p.course.year}}-{{p.course.sem}})</a>
-                </li>
-            {% endif %}
-        {% empty %}
-            <li>You have no verified courses</li>
-        {% endfor %}
+   <div class="card">
+    <div class="card-header">
+        <h1 class="page-title">My courses</h1>
+    </div>
+</div>
+   <div>
+       
+    {% for p in pt %}
+    <div class="row">
+        <div class="col-xxl-6 col-xl-6 col-lg-12 col-md-12 col-sm-12 col-12">
+            <div class="card overflow-hidden border-primary">
+                <h4 class="card-header fw-semibold text-light bg-dark">
+                    <a href="{% url 'Users:course' p.course.id %}"> {{p.course.subject}}{{p.course.course_code}} ({{p.course.year}}-{{p.course.sem}})
+                </h4>
+                <div class="card-body">
+                    <div class="d-flex justify-content-center">
+                        <div class="col-xxl-12 col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12 text-center">
+                            <h3 class="mb-2 fw-semibold text-primary">
 
-    </ul>
-    <ul>
-        <li>Courses pending verification</li>
-        {% for p in pt %}
-            {% if not p.verification_status %}
-                <li>
-                    <a href="{% url 'Users:course' p.course.id %}"> {{p.course.subject}}{{p.course.course_code}} ({{p.course.year}}-{{p.course.sem}})</a>
-                </li>
-            {% endif %}
-        {% empty %}
-            <li>All your course registration are verified</li>
-        {% endfor %}
+                                <a href="{% url 'Users:course' p.course.id %}"> {{p.course.course_description}}</a>
+                            </h3>
 
-    </ul>
-    <ul>
-        {% for p in pt %}
-            <!-- do nothing -->
-        {% empty %}
-            <li>No courses registered</li>
-        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+       <div class="card">
+           <div class="card-header">
+               <h2 class="slide-item">You have no registered courses</h2>
+           </div>
+       </div>
+    {% endfor %}
 
-    </ul>
+</div>
+   
+ 
+
+    
 {% endblock body %}

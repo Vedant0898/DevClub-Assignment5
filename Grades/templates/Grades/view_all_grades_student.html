@@ -3,54 +3,42 @@
 
 {% block head %}
     <title>View all Grades</title>
-    <style>
-        table {
-          font-family: arial, sans-serif;
-          border-collapse: collapse;
-          width: 90%;
-        }
-        
-        td, th {
-          border: 1px solid #151515;
-          text-align: left;
-          padding: 8px;
-        }
-        
-        tr:nth-child(even) {
-          background-color: #dddddd;
-        }
-    </style>
 {% endblock head %}
 
 {% block body %}
-    <h1>
-        Grades for {{s.first_name}} {{s.last_name}}
-    </h1>
+  
+    <div class="card">
+    <div class="card-header">
+        <h1>
+            Grades for {{s.first_name}} {{s.last_name}}
+        </h1>
+    </div>
+</div>
     
-    
-    <table>
-        <tr>
-            <th>Course Name</th>
-            <th>Grade</th>
-        </tr>
+    <table class="table table-info table-striped table-bordered border-primary table-responsive-md">
+    <tr>
+        <th>Course Name</th>
+        <th>Grade</th>
+    </tr>
 
-        {% for key,val in grades.items %}
-            <tr>
-                
-                <td>{{key}}</td>
-                
-                {% if val %}
-                    <td>{{val.grade}}</td>
-                {% else %}
-                    <td>-</td>
-                {% endif %}
-            </tr>
-        {% empty %}
-        <p>No registered courses found</p>
-        {% endfor %}
+    {% for key,val in grades.items %}
+    <tr>
+
+        <td>{{key}}</td>
+
+        {% if val %}
+        <td>{{val.grade}}</td>
+        {% else %}
+        <td>-</td>
+        {% endif %}
+    </tr>
+    {% empty %}
+    <tr><td>No registered courses found</td><td></td></tr>
+        
+    {% endfor %}
 
 
-    </table>
+</table>
 
 
 {% endblock body %}
