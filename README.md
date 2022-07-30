@@ -7,7 +7,7 @@ Users are of 3 types
 - Instructor
 - Student
 - Admin
-<br><br>
+<br>
 
 ### Instructor Home Page
 ![](Images/1.png)
@@ -24,11 +24,14 @@ Users are of 3 types
 ![](Images/3.png)
 <br>
 
+---
+
 ### My courses
 ![](Images/5.png)
 Note: Create new course is only visible for Instructor
 
-### Course page 
+### Course
+- Instructor can edit and create new course
 - Instructor View ![](Images/7.png)
 - Student View ![](Images/15.png)
 
@@ -36,21 +39,41 @@ Note: Create new course is only visible for Instructor
 ![](Images/10.png)
 
 ### Course material
+- Instructor can edit, delete and add new material
 ![](Images/11.png)
 
+---
+
 ### Total Grade (instructor view)
+- Stats of all assignments and total grade
+- Can be calculated automatically by **Calculate Total Grades** in Course page or uploaded manually by instructor
 ![](Images/12.png)
 
 ### Total Grade of all courses (student view)
+- Grades of all courses in which the student is registered
 ![](Images/16.png)
 
 ### Gradesheet of one course (student view)
+- Grades of all assignments and stats of a course
 ![](Images/17.png)
 
+---
+## Additional Featurs
+
 ### Light Theme
+- Option to switch to **Light Theme**
 ![](Images/2.png)
 
-Unfortunately the project couldn't be uploaded on Heroku 
+### Responsive on Mobile
+- All pages are responsive on mobile with collapsible side bar
+- ![](Images/18.png)
+- ![](Images/19.png)
+
+---
+### Small issues
+- Unfortunately the project couldn't be deployed on Heroku 
+- Assets folder is not completely uploaded (ig it needs LFS will try it later) 
+- Couldn't complete linking and designing of DMs and Discussion Forum (btw implementation complete)
 
 ---
 You have learnt about backend engineering with Django in our session. Now use it to create a web application by yourself!
