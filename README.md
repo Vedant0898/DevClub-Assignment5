@@ -12,10 +12,10 @@ Users are of 3 types
 ### Instructor Home Page
 ![](Images/1.png)
 
-### The home page for student
+### Student Home Page
 ![](Images/13.png)
 
-### Home page for admin (Default Django admin site)
+### Admin Home Page (Default Django admin site)
 ![](Images/14.png)
 
 <br>
@@ -23,6 +23,14 @@ Users are of 3 types
 ### Profile page
 ![](Images/3.png)
 <br>
+
+---
+
+### Login
+![](Images/23.png)
+
+### Registration
+![](Images/24.png)
 
 ---
 
@@ -41,6 +49,19 @@ Note: Create new course is only visible for Instructor
 ### Course material
 - Instructor can edit, delete and add new material
 ![](Images/11.png)
+
+---
+
+### View all assignments
+- Instructor can add/edit and create assignment
+![](Images/20.png)
+
+### Assignment view
+![](Images/21.png)
+Couldn't complete design of assignment section
+
+### View submission of assignment
+![](Images/22.png)
 
 ---
 
@@ -66,14 +87,18 @@ Note: Create new course is only visible for Instructor
 
 ### Responsive on Mobile
 - All pages are responsive on mobile with collapsible side bar
-- ![](Images/18.png)
-- ![](Images/19.png)
+![](Images/18.png)
+![](Images/19.png)
+
+### Markdown support in communications
+![](Images/25.png)
 
 ---
 ### Small issues
 - Unfortunately the project couldn't be deployed on Heroku 
 - Assets folder is not completely uploaded (ig it needs LFS will try it later) 
 - Couldn't complete linking and designing of DMs and Discussion Forum (btw implementation complete)
+- Assignments section couldn't be designed completely
 
 ---
 You have learnt about backend engineering with Django in our session. Now use it to create a web application by yourself!
